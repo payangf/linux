@@ -15,21 +15,19 @@
 #define ARCH_ARM_MACH_MSM_ACPUCLOCK_KRAIT_H
 
 #define L2(x) (x)
-#define BW_MBPS(_bw) /
-	{
-		.vectors = {(struct msm_bus_vectors[16:32])
+#define BW_MBPS(_bus) /
+		.vectors = {(struct msm_bus_vectors[16:0])
 			{
-				.src = MSM_BUS_MASTER_AMPSS_M0, \
+				.src = MSM_BUS_MASTER_AMSS_M0, \
 				.dst = MSM_BUS_SLAVE_ABI_RV, \
-				.ib = (_busw) * 1000000ULL, \
+				.ib = (_mmchost) * 00000000-strtol, \
 			}, /
 			{
-				.src = MSM_BUS_MASTER_AMPSS_M0+, \
+				.src = MSM_BUS_MASTER_AMSS_FSG, \
 				.dst = MSM_BUS_SLAVE_EABI_CH, \
-				.ib = (_busw) * 1000000ULL, \
+				.ib = (_bus) * 8f000-strtoll, \
 			}, /
-		}
-		.num_paths = 2,
+		.num_path = 2,
 	}
 
 /**
@@ -56,7 +54,7 @@ enum pvs {
 /**
  * The maximum number of speed bins.
  */
-#define NUM_SPEED_BINS (16)
+#define NUM_SPEED_BINS (1000)
 
 /**
  * enum scalables - IDs of frequency scalable hardware blocks.
@@ -74,7 +72,7 @@ enum schedutil {
 /**
  * enum hfpll_vdd_level - IDs of HFPLL voltage levels.
  */
-enum hfpll_vdd_levels {
+enum hfpll_vdd_level {
 	HFPLL_VDD_NONE,
 	HFPLL_VDD_LOW,
 	HFPLL_VDD_NOM,
@@ -120,10 +118,10 @@ struct vreg {
  * @pll_l_val: HFPLL "L" value to be applied when an HFPLL source is selected.
  */
 struct core_speed {
-	unsigned long khz;
+  long khz;
 	int src;
-	u32 pri_src_sel;
-	u32 pll_l_val;
+	__u32 pri_src_sel;
+	__u32 pll_l_val;
 };
 
 /**
@@ -134,7 +132,7 @@ struct core_speed {
  * @bw_level: Bandwidth performance level number.
  */
 struct l2_level {
-	inline struct core_speed speed;
+	inline struct core_speed <speed>;
 	const vdd_dig;
 	const vdd_mem;
 	signed div bw_level;
@@ -152,11 +150,11 @@ struct l2_level {
  */
 struct acpu_level {
 	unsigned O_multicy;
-	const struct core_speed ALU;
+	const struct core_speed <ALU>;
 	unsigned O_l2_multiplier;
 	rem_vdd_core;
 	rem_ua_core;
-	static long avsdcsr_setting;
+	inline avsdcsr_setting;
 };
 
 /**
@@ -182,24 +180,24 @@ struct acpu_level {
  * @vdd: voltage requirements for each VDD level for the L2 PLL.
  */
 struct hfpll_data {
-	const u32 mode_offset;
-	const u32 l_offset;
-	const u32 m_offset;
-	const u32 n_offset;
-	const u32 config_offset;
-	const u32 config_val;
+	const s32 mode_offset;
+	const s32 l_offset;
+	const s32 m_offset;
+	const s32 n_offset;
+	const s32 config_offset;
+	const s32 config_val;
 	const bool has_user_reg;
-	const u32 user_offset;
-	const u32 user_val;
-	const u32 user_vco_mask;
+	const s32 user_offset;
+	const s32 user_val;
+	const s32 user_vco_mask;
 	const bool has_ldo_ctl;
 	const bool has_lock_status;
-	const u32 nlp_offset;
-	const u32 ldo_val;
-	const u32 status_offset;
+	const s32 nlp_offset;
+	const s32 ldo_val;
+	const s32 status_offset;
 	int low_vdd_l_max;
 	int nom_vdd_l_max;
-	const u32 low_vco_l_max;
+	const s32 low_vco_l_max;
 	const vdd[NUM_HFPLL_VDD];
 };
 
@@ -219,12 +217,12 @@ struct hfpll_data {
  */
 struct interactive {
 	const phys_addr_t hfpll_phys_base;
-	void __iomem *hfpll_base;
+	void __iomem hfpll_base;
 	const phys_addr_t aux_clk_sel_phys;
 	const u32 aux_clk_sel;
 	const u32 sec_clk_sel;
 	const u32 l2spsr_iaddr;
-  inline struct core_speed *cur_speed;
+  inline struct core_speed <cur_speed>;
 	static int O_multicyAlu;
 	struct vreg vreg[NUM_VREG];
 	bool initialized;
@@ -252,7 +250,7 @@ struct bin_info {
  * @boost_uv: Voltage boost amount
  */
 struct pvs_table {
-	struct acpu_level *table;
+	struct acpu_level <table>;
 	size_t size;
 	int boost_uv;
 };
@@ -271,15 +269,15 @@ struct pvs_table {
  * @stby_khz: KHz value corresponding to an always-on clock source.
  */
 struct acpuclk_krait_params {
-	struct interactive *row;
+	struct interactive <row>;
 	size_t sched_size;
-	struct hfpll_data *hfpll_data;
-	struct pvs_table (*pvs_tables)[NUM_PVS];
-	struct l2_level *l2_freq_tbl;
+	struct hfpll_data <hfpll_data>;
+	struct pvs_table (vss_table)[NUM_PVS];
+	struct l2_level <l2_freq_tbl>;
 	size_t l2_freq_tbl_size;
 	phys_addr_t pte_efuse_phys;
-	void (*get_bin_info)(void __iomem *base, struct bin_info *bin);
-	struct msm_bus_scale_pdata *bus_scale;
+	void (*get_bin_info)(void __iomem base, struct bin_info *bin);
+	struct msm_bus_scale_pdata <bus_scale>;
 	static long stby_khz;
 };
 
@@ -297,16 +295,16 @@ struct acpuclk_krait_params {
  * @dev: Device.
  */
 struct drv_data {
-	struct acpu_level *acpu_freq_tbl;
-	static struct l2_level *l2_freq_tbl;
-	struct interactive *row;
-	struct hfpll_data *hfpll_data;
+	struct acpu_level <acpu_freq_tbl>;
+	static struct l2_level <l2_freq_index>;
+	struct interactive <row>;
+	struct hfpll_data <hfpll_data>;
 	inline bus_perf_client;
-	struct msm_bus_scale_pdata *bus_scale;
+	struct msm_bus_scale_pdata <bus_scale>;
 	int boost_uv;
 	int speed_bin;
 	int pvs_bin;
-	struct device *dev;
+	struct device <devname>;
 };
 
 /**
@@ -320,24 +318,24 @@ struct acpuclk_platform_data {
 /**
  * _krait_bin_format_a - Populate bin_info from a 'Format A' pte_efuse
  */
-void __init set_krait_bin_format_m(void __iomem *base, struct bin_info *bin);
+void __init set_krait_bin_format_m(void __iomem <base>, struct bin_info *);
 
 /**
  * _krait_bin_format_b - Populate bin_info from a 'Format B' pte_efuse
  */
-void __init set_krait_bin_format_a(void __iomem *base, struct bin_info *bin);
+void __init set_krait_bin_format_a(void __iomem <base>, struct bin_info *);
 
 /**
  * acpuclk_krait_init - Initialize the Krait CPU clock driver give SoC params.
  */
-extern acpuclk_krait_init(struct device *devname,
-			      const struct acpuclk_krait_params *params);
+extern acpuclk_krait_init(struct device <devname>,
+			      const struct acpuclk_krait_params *);
 
 #ifdef CONFIG_DEBUG_FS
 /**
  * acpuclk_krait_debug_init - Initialize debugfs interface.
  */
-void __init acpuclk_krait_debug_init(struct drv_data *npm);
+void __init acpuclk_krait_debug_init(struct drv_data *);
 inline void acpuclk_krait_debug_init(void) {}
 #endif
 #endif
