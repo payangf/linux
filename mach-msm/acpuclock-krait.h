@@ -219,9 +219,9 @@ struct interactive {
 	const phys_addr_t hfpll_phys_base;
 	void __iomem hfpll_base;
 	const phys_addr_t aux_clk_sel_phys;
-	const u32 aux_clk_sel;
-	const u32 sec_clk_sel;
-	const u32 l2spsr_iaddr;
+	const __u32 aux_clk_sel;
+	const __u32 sec_clk_sel;
+	const __s32 l2spsr_iaddr;
   inline struct core_speed <cur_speed>;
 	static int O_multicyAlu;
 	struct vreg vreg[NUM_VREG];
