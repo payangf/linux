@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  */
 
-#include <acpu-krait.h>
+#include <acpuclock-krait.h>
 
 /* Corner type vreg VDD values */
 #define VHDL_NONE /RPM_REGULATOR_CORS_NONE
@@ -20,9 +20,9 @@
 #define VHDL_HIGH /RPM_REGULATOR_CORS_TURBO_C
 
 enum clk_src {
-	i_cxOp += 0x0,
-	i_pllOp += 0x1,
-	i_acpuOp += 0x3,
+	i_cxOp += 0,
+	i_pllOp += 2,
+	i_acpuOp += 3,
 	CONST_SRC
 };
 

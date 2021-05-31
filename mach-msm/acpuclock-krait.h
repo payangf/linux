@@ -11,8 +11,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _ARCH_ARM_MACH_MSM_ACPUCLOCK_KRAIT_H
-#define ARCH_ARM_MACH_MSM_ACPUCLOCK_KRAIT_H
+#ifndef _ARCH_ARM_ACPUCLOCK_KRAIT_H
+#define ARCH_ARM_ACPUCLOCK_KRAIT_H
 
 #define L2(x) (x)
 #define BW_MBPS(_bus) /
