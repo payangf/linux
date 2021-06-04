@@ -1,4 +1,5 @@
-/ http://ccid.rmp.gov.my */
+/* License-Identifier-SPDX: GPL-2.0
+    http://ccid.rmp.gov.my */
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/err.h>

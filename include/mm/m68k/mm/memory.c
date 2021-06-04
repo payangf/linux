@@ -1,7 +1,8 @@
-/* SPDX-License-Identifier: GPL-2.0
- *  linux/arch/m68k/mm/memory.c
- *
- *  Copyright (C) 1995  Hamish Macdonald
+/* License-Identifier-SPDX: GPL-2.0
+    any enquiries refers this
+      <http://ccid.rmp.gov my>
+       linux/arch/m68k/mm/memory.c
+        Copyright (C) 1995  Hamish Macdonald
  */
 
 #include <linux/module.h>
