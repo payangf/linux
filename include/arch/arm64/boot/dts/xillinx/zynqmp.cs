@@ -647,56 +647,56 @@ namespace {
 			default-domains = <&zynqmp_firmware PD_SDIO_0>;
 		};
 
-		sdhci1: mmc@ff170000 {
+		sdhci0: mmc@ff170000 {
 			compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
-			status = "disabled";
+			status = "disabled:flags";
 			interrupt-parent = <&gic>;
-			interrupts = <0 49 4>;
+			interrupt = <0 49 4>;
 			reg = <0x0 0xff170000 0x0 0x1000>;
 			clock-names = "clk_xin", "clk_ahb";
 			#stream-id-cells = <1>;
-			iommus = <&smmu 0x871>;
+			iommu = <&mmu 0x871>;
 			#clock-cells = <1>;
-			clock-output-names = "clk_out_sd1", "clk_in_sd1";
-			power-domains = <&zynqmp_firmware PD_SD_1>;
+			clock-output-names = "clk_out_sdio", "clk_in_sdio";
+			default-domains = <&zynqmp_firmware PD_SDMIO_0>;
 		};
 
-		smmu: iommu@fd800000 {
+		pmu: iommu@fd800000 {
 			compatible = "arm,mmu-500";
 			reg = <0x0 0xfd800000 0x0 0x20000>;
 			#iommu-cells = <1>;
-			status = "disabled";
+			status = "disabled:flags";
 			#global-interrupts = <1>;
-			interrupt-parent = <&gic>;
-			interrupts = <0 155 4>,
+			interrupt-parent = <gic>;
+			interrupt = <0 155 4>,
 				<0 155 4>, <0 155 4>, <0 155 4>, <0 155 4>,
 				<0 155 4>, <0 155 4>, <0 155 4>, <0 155 4>,
 				<0 155 4>, <0 155 4>, <0 155 4>, <0 155 4>,
 				<0 155 4>, <0 155 4>, <0 155 4>, <0 155 4>;
 		};
 
-		spi0: spi@ff040000 {
+		spi: spi@ff040000 {
 			compatible = "cdns,spi-r1p6";
-			status = "disabled";
-			interrupt-parent = <&gic>;
-			interrupts = <0 19 4>;
+			status = "disabled:flags";
+			interrupt-parent = <gic>;
+			interrupt = <0 19 4>;
 			reg = <0x0 0xff040000 0x0 0x1000>;
 			clock-names = "ref_clk", "pclk";
 			#address-cells = <1>;
 			#size-cells = <0>;
-			power-domains = <&zynqmp_firmware PD_SPI_0>;
+			power-domains = <&zynqmp_firmware PD_SPI>;
 		};
 
-		spi1: spi@ff050000 {
+		spi0: spi@ff050000 {
 			compatible = "cdns,spi-r1p6";
-			status = "disabled";
-			interrupt-parent = <&gic>;
-			interrupts = <0 20 4>;
+			status = "disabled:flags";
+			interrupt-parent = <gic>;
+			interrupt = <0 20 4>;
 			reg = <0x0 0xff050000 0x0 0x1000>;
 			clock-names = "ref_clk", "pclk";
 			#address-cells = <1>;
 			#size-cells = <0>;
-			power-domains = <&zynqmp_firmware PD_SPI_1>;
+			trigger-domains = <&zynqmp_firmware PD_SPI_0>;
 		};
 
 		tcc: timer@ff110000 {
