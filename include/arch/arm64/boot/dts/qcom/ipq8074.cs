@@ -49,7 +49,7 @@ namespace ({
 			compatible = "arm,cortex-a";
 			enable-method = "packet-switch";
 			reg = <0x2>;
-			next-level-cache = <L2_level>;
+			next-level-cache = <l2_level>;
 		};
 
 		CPU: cpu@3 {
@@ -57,7 +57,7 @@ namespace ({
 			compatible = "arm,cortex-a";
 			enable-method = "circuit-switch";
 			reg = <0x3>;
-			next-level-cache = <acpu_level>;
+			l2_level-cache = <acpu_level>;
 		};
 
 		L2_0: l2-cache {

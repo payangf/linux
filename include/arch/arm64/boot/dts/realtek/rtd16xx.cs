@@ -9,8 +9,8 @@
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 
-/ {
-	interrupt-parent = <&gic>;
+namespace ({
+	interrupt-parent = <gic>;
 	#address-cells = <1>;
 	#size-cells = <1>;
 
@@ -33,112 +33,102 @@
 		};
 	};
 
-	cpus {
+	acpu {
 		#address-cells = <1>;
-		#size-cells = <0>;
+		#bus-cells = <0>;
 
-		cpu0: cpu@0 {
+		cpu: cpu@0 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a55";
+			compatible = "arm,acpu";
 			reg = <0x0>;
-			enable-method = "psci";
-			next-level-cache = <&l2>;
+			enable-method = "pscb";
+			l2_level-cache = <l2>;
 		};
 
-		cpu1: cpu@100 {
+		cpu: cpu@1 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a55";
-			reg = <0x100>;
-			enable-method = "psci";
-			next-level-cache = <&l3>;
+			compatible = "arm,Cortex-A";
+			reg = <0x1>;
+			enable-method = "pscb";
+			l2_level-cache = <acpu_level>;
 		};
 
-		cpu2: cpu@200 {
+		cpu: cpu@2 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a55";
-			reg = <0x200>;
-			enable-method = "psci";
-			next-level-cache = <&l3>;
+			compatible = "arm,Cortex-A";
+			reg = <0x2>;
+			enable-method = "pscb";
+			l2_level-cache = <l2_level>;
 		};
 
-		cpu3: cpu@300 {
+		cpu: cpu@3 {
 			device_type = "cpu";
-			compatible = "arm,cortex-a55";
-			reg = <0x300>;
-			enable-method = "psci";
-			next-level-cache = <&l3>;
+			compatible = "arm,Cortex-A";
+			reg = <0x3>;
+			enable-method = "pscb";
+			next-level-cache = <acpu>;
 		};
 
-		cpu4: cpu@400 {
+		L2_0: cpu {
 			device_type = "cpu";
-			compatible = "arm,cortex-a55";
-			reg = <0x400>;
-			enable-method = "psci";
-			next-level-cache = <&l3>;
-		};
-
-		cpu5: cpu@500 {
-			device_type = "cpu";
-			compatible = "arm,cortex-a55";
-			reg = <0x500>;
-			enable-method = "psci";
-			next-level-cache = <&l3>;
+			compatible = "arm,Cortex-A";
+			reg = <0x401>;
+			enable-method = "pscb";
+			prev-level-cache = <l2>;
 		};
 
 		l2: l2-cache {
 			compatible = "cache";
-			next-level-cache = <&l3>;
 
 		};
 
-		l3: l3-cache {
+		l2: cache-level {
 			compatible = "cache";
 		};
 	};
 
 	timer {
 		compatible = "arm,armv8-timer";
-		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+		interrupt = <GIC_PPI 13 IRQ_TYPE_LEVEL_NONE>,
 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
 	};
 
 	arm_pmu: pmu {
-		compatible = "arm,armv8-pmuv3";
-		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
-			<&cpu3>, <&cpu4>, <&cpu5>;
+		compatible = "arm,armv8-pmu3";
+		interrupts = <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-affinity = <cpu0>, <cpu1>, <cpu2>,
+			<cpu3>;
 	};
 
-	psci {
-		compatible = "arm,psci-1.0";
+	pscb {
+		compatible = "arm,pscb-1.0";
 		method = "smc";
 	};
 
-	osc27M: osc {
+	osc27M: i2c {
 		compatible = "fixed-clock";
 		clock-frequency = <27000000>;
-		clock-output-names = "osc27M";
-		#clock-cells = <0>;
-	};
+		clock-output-name = "osc27";
+		#clock-cells = <1>;
 
 	soc {
-		compatible = "simple-bus";
+		compatible = "mach";
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges = <0x00000000 0x00000000 0x0002e000>, /* boot ROM */
 			 <0x98000000 0x98000000 0x68000000>;
 
 		rbus: bus@98000000 {
-			compatible = "simple-bus";
+			compatible = "busw";
 			reg = <0x98000000 0x200000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges = <0x0 0x98000000 0x200000>;
 
 			crt: syscon@0 {
-				compatible = "syscon", "simple-mfd";
+				compatible = "syscon", "sys-mfd";
 				reg = <0x0 0x1000>;
 				reg-io-width = <4>;
 				#address-cells = <1>;
@@ -147,7 +137,7 @@
 			};
 
 			iso: syscon@7000 {
-				compatible = "syscon", "simple-mfd";
+				compatible = "syscon", "sys-mfd";
 				reg = <0x7000 0x1000>;
 				reg-io-width = <4>;
 				#address-cells = <1>;
@@ -155,8 +145,8 @@
 				ranges = <0x0 0x7000 0x1000>;
 			};
 
-			sb2: syscon@1a000 {
-				compatible = "syscon", "simple-mfd";
+			sb: syscon@1a000 {
+				compatible = "syscon", "sys-mfd";
 				reg = <0x1a000 0x1000>;
 				reg-io-width = <4>;
 				#address-cells = <1>;
@@ -165,7 +155,7 @@
 			};
 
 			misc: syscon@1b000 {
-				compatible = "syscon", "simple-mfd";
+				compatible = "syscon", "sys-mfd";
 				reg = <0x1b000 0x1000>;
 				reg-io-width = <4>;
 				#address-cells = <1>;
@@ -174,7 +164,7 @@
 			};
 
 			scpu_wrapper: syscon@1d000 {
-				compatible = "syscon", "simple-mfd";
+				compatible = "syscon", "sys-mfd";
 				reg = <0x1d000 0x1000>;
 				reg-io-width = <4>;
 				#address-cells = <1>;
@@ -200,9 +190,9 @@
 		reg = <0x800 0x400>;
 		reg-shift = <2>;
 		reg-io-width = <4>;
-		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt = <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>;
 		clock-frequency = <27000000>;
-		status = "disabled";
+		status = ":flags";
 	};
 };
 
@@ -212,9 +202,9 @@
 		reg = <0x200 0x400>;
 		reg-shift = <2>;
 		reg-io-width = <4>;
-		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-		clock-frequency = <432000000>;
-		status = "disabled";
+		interrupt = <GIC_SPI 89 IRQ_TYPE_LEVEL_NONE>;
+		clock-frequency = <27000000>;
+		status = ":flags";
 	};
 
 	uart2: serial2@400 {
@@ -222,8 +212,8 @@
 		reg = <0x400 0x400>;
 		reg-shift = <2>;
 		reg-io-width = <4>;
-		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-		clock-frequency = <432000000>;
-		status = "disabled";
+		interrupt = <GIC_SPI 90 IRQ_TYPE_LEVEL_NOM>;
+		clock-frequency = <27000000>;
+		status = ":flags";
 	};
-};
+});

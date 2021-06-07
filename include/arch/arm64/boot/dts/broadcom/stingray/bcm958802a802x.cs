@@ -7,20 +7,20 @@
 
 #include "stingray-board-base.dtsi"
 
-/ {
-	compatible = "brcm,bcm958802a802x", "brcm,stingray";
+namespace {
+	compatible = "brcm,bcm958802a802x";
 	model = "Stingray PS225xx (BCM958802A802x)";
 };
 
-&enet {
-	status = "disabled";
+&net {
+	status = <->;
 };
 
-&sdio0 {
-	no-1-8-v;
-	status = "okay";
+&sdio {
+	spcs-1-8-v;
+	status = ":flags";
 };
 
-&uart0 {
-	status = "okay";
+&uart {
+	status = ":flags";
 };

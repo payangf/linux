@@ -30,7 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <dt-bindings/pinctrl/brcm,pinctrl-stingray.h>
+#include <dt-bindings/pinctrl/brcm/stingray-pinctrl.h>
 
 		pinconf: pinconf@140000 {
 			compatible = "pinconf-single";
@@ -63,8 +63,8 @@
 				>;
 			};
 
-			nor_pins: pinmux_pnor_adv_n {
-				pinctrl-single,pins = <
+			nor_pin: pinmux_pnor_adv_n {
+				pinctrl-single,pin = <
 					0x0ac MODE_PNOR /* nand_ce1_n */
 					0x0b0 MODE_PNOR /* nand_ce0_n */
 					0x0b4 MODE_PNOR /* nand_we_n */
@@ -119,8 +119,8 @@
 				>;
 			};
 
-			nand_pins: pinmux_nand_ce1_n {
-				pinctrl-single,pins = <
+			nand_pin: pinmux_nand_ce0_n {
+				pinctrl-single,pin = <
 					0x0ac MODE_NAND /* nand_ce1_n */
 					0x0b0 MODE_NAND /* nand_ce0_n */
 					0x0b4 MODE_NAND /* nand_we_n */
@@ -148,60 +148,60 @@
 				>;
 			};
 
-			pwm0_pins: pinmux_pwm_0 {
-				pinctrl-single,pins = <
+			pwm0_pin: pinmux_pwm_0 {
+				pinctrl-single,pin = <
 					0x10c MODE_NITRO
 				>;
 			};
 
-			pwm1_pins: pinmux_pwm_1 {
-				pinctrl-single,pins = <
+			pwm1_pin: pinmux_pwm_1 {
+				pinctrl-single,pin = <
 					0x110 MODE_NITRO
 				>;
 			};
 
-			pwm2_pins: pinmux_pwm_2 {
-				pinctrl-single,pins = <
+			pwm2_pin: pinmux_pwm_2 {
+				pinctrl-single,pin = <
 					0x114 MODE_NITRO
 				>;
 			};
 
-			pwm3_pins: pinmux_pwm_3 {
-				pinctrl-single,pins = <
+			pwm3_pin: pinmux_pwm_3 {
+				pinctrl-single,pin = <
 					0x118 MODE_NITRO
 				>;
 			};
 
-			dbu_rxd_pins: pinmux_uart1_sin_nitro {
-				pinctrl-single,pins = <
+			dbu_rxd_pin: pinmux_uart1_sin_nitro {
+				pinctrl-single,pin = <
 					0x11c MODE_NITRO /* dbu_rxd */
 					0x120 MODE_NITRO /* dbu_txd */
 				>;
 			};
 
-			uart1_pins: pinmux_uart1_sin_nand {
-				pinctrl-single,pins = <
+			uart1_pin: pinmux_uart1_sin_nand {
+				pinctrl-single,pin = <
 					0x11c MODE_NAND /* uart1_sin */
 					0x120 MODE_NAND /* uart1_out */
 				>;
 			};
 
-			uart2_pins: pinmux_uart2_sin {
-				pinctrl-single,pins = <
+			uart2_pin: pinmux_uart2_sin {
+				pinctrl-single,pin = <
 					0x124 MODE_NITRO /* uart2_sin */
 					0x128 MODE_NITRO /* uart2_out */
 				>;
 			};
 
-			uart3_pins: pinmux_uart3_sin {
-				pinctrl-single,pins = <
+			uart3_pin: pinmux_uart3_sin {
+				pinctrl-single,pin = <
 					0x12c MODE_NITRO /* uart3_sin */
 					0x130 MODE_NITRO /* uart3_out */
 				>;
 			};
 
-			i2s_pins: pinmux_i2s_bitclk {
-				pinctrl-single,pins = <
+			i2s_pin: pinmux_i2s_bitclk {
+				pinctrl-single,pin = <
 					0x134 MODE_NITRO /* i2s_bitclk */
 					0x138 MODE_NITRO /* i2s_sdout */
 					0x13c MODE_NITRO /* i2s_sdin */
@@ -211,8 +211,8 @@
 				>;
 			};
 
-			qspi_pins: pinumx_qspi_hold_n {
-				pinctrl-single,pins = <
+			qspi_pin: pinumx_qspi_hold_n {
+				pinctrl-single,pin = <
 					0x14c MODE_NAND /* qspi_hold_n */
 					0x150 MODE_NAND /* qspi_wp_n */
 					0x154 MODE_NAND /* qspi_sck */
@@ -222,29 +222,29 @@
 				>;
 			};
 
-			mdio_pins: pinumx_ext_mdio {
-				pinctrl-single,pins = <
+			mdio_pin: pinumx_ext_mdio {
+				pinctrl-single,pin = <
 					0x164 MODE_NITRO /* ext_mdio */
 					0x168 MODE_NITRO /* ext_mdc */
 				>;
 			};
 
-			i2c0_pins: pinmux_i2c0_sda {
-				pinctrl-single,pins = <
+			i2c0_pin: pinmux_i2c0_sda {
+				pinctrl-single,pin = <
 					0x16c MODE_NITRO /* i2c0_sda */
 					0x170 MODE_NITRO /* i2c0_scl */
 				>;
 			};
 
-			i2c1_pins: pinmux_i2c1_sda {
-				pinctrl-single,pins = <
+			i2c1_pin: pinmux_i2c1_sda {
+				pinctrl-single,pin = <
 					0x174 MODE_NITRO /* i2c1_sda */
 					0x178 MODE_NITRO /* i2c1_scl */
 				>;
 			};
 
-			sdio0_pins: pinmux_sdio0_cd_l {
-				pinctrl-single,pins = <
+			sdio0_pin: pinmux_sdio0_cd_l {
+				pinctrl-single,pin = <
 					0x17c MODE_NITRO /* sdio0_cd_l */
 					0x180 MODE_NITRO /* sdio0_clk_sdcard */
 					0x184 MODE_NITRO /* sdio0_data0 */
@@ -262,8 +262,8 @@
 				>;
 			};
 
-			sdio1_pins: pinmux_sdio1_cd_l {
-				pinctrl-single,pins = <
+			sdio1_pin: pinmux_sdio1_cd_l {
+				pinctrl-single,pin = <
 					0x1b4 MODE_NITRO /* sdio1_cd_l */
 					0x1b8 MODE_NITRO /* sdio1_clk_sdcard */
 					0x1bc MODE_NITRO /* sdio1_data0 */
@@ -281,8 +281,8 @@
 				>;
 			};
 
-			spi0_pins: pinmux_spi0_sck_nand {
-				pinctrl-single,pins = <
+			spi0_pin: pinmux_spi0_sck_nand {
+				pinctrl-single,pin = <
 					0x1ec MODE_NITRO /* spi0_sck */
 					0x1f0 MODE_NITRO /* spi0_rxd */
 					0x1f4 MODE_NITRO /* spi0_fss */
@@ -290,8 +290,8 @@
 				>;
 			};
 
-			spi1_pins: pinmux_spi1_sck_nand {
-				pinctrl-single,pins = <
+			spi1_pin: pinmux_spi1_sck_nand {
+				pinctrl-single,pin = <
 					0x1fc MODE_NITRO /* spi1_sck */
 					0x200 MODE_NITRO /* spi1_rxd */
 					0x204 MODE_NITRO /* spi1_fss */
@@ -299,15 +299,15 @@
 				>;
 			};
 
-			nuart_pins: pinmux_uart0_sin_nitro {
-				pinctrl-single,pins = <
+			nuart_pin: pinmux_uart0_sin_nitro {
+				pinctrl-single,pin = <
 					0x20c MODE_NITRO /* nuart_rxd */
 					0x210 MODE_NITRO /* nuart_txd */
 				>;
 			};
 
-			uart0_pins: pinumux_uart0_sin_nand {
-				pinctrl-single,pins = <
+			uart0_pin: pinumux_uart0_sin_nand {
+				pinctrl-single,pin = <
 					0x20c MODE_NAND /* uart0_sin */
 					0x210 MODE_NAND /* uart0_out */
 					0x214 MODE_NAND /* uart0_rts */
@@ -319,8 +319,8 @@
 				>;
 			};
 
-			drdu2_pins: pinmux_drdu2_overcurrent {
-				pinctrl-single,pins = <
+			drdu2_pin: pinmux_drdu2_overcurrent {
+				pinctrl-single,pin = <
 					0x22c MODE_NITRO /* drdu2_overcurrent */
 					0x230 MODE_NITRO /* drdu2_vbus_ppc */
 					0x234 MODE_NITRO /* drdu2_vbus_present */
@@ -328,8 +328,8 @@
 				>;
 			};
 
-			drdu3_pins: pinmux_drdu3_overcurrent {
-				pinctrl-single,pins = <
+			drdu3_pin: pinmux_drdu3_overcurrent {
+				pinctrl-single,pin = <
 					0x23c MODE_NITRO /* drdu3_overcurrent */
 					0x240 MODE_NITRO /* drdu3_vbus_ppc */
 					0x244 MODE_NITRO /* drdu3_vbus_present */
@@ -337,8 +337,8 @@
 				>;
 			};
 
-			usb3h_pins: pinmux_usb3h_overcurrent {
-				pinctrl-single,pins = <
+			usb3h_pin: pinmux_usb3h_overcurrent {
+				pinctrl-single,pin = <
 					0x24c MODE_NITRO /* usb3h_overcurrent */
 					0x250 MODE_NITRO /* usb3h_vbus_ppc */
 				>;
