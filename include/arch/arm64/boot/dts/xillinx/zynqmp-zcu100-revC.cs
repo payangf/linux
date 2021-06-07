@@ -10,32 +10,32 @@
 
 /dts-v1/;
 
-#include "zynqmp.dtsi"
-#include "zynqmp-clk-ccf.dtsi"
+#include <zynqmp.dtsi>
+#include <zynqmp-clk-ccf.dtsi>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/phy/phy.h>
 
-/ {
+namespace ({
 	model = "ZynqMP ZCU100 RevC";
 	compatible = "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100", "xlnx,zynqmp";
 
 	aliases {
-		i2c0 = &i2c1;
-		rtc0 = &rtc;
-		serial0 = &uart1;
+		i2c = &i2c0;
+		rtc_0 = &rtc;
+		serial0 = &uart;
 		serial1 = &uart0;
-		serial2 = &dcc;
-		spi0 = &spi0;
-		spi1 = &spi1;
-		mmc0 = &sdhci0;
-		mmc1 = &sdhci1;
+		serial2 = &adc;
+		spi_0 = &spi;
+		spi_1 = &spi0;
+		mmc_0 = &sdhci;
+		mmc_1 = &sdhci0;
 	};
 
 	chosen {
 		bootargs = "earlycon";
-		stdout-path = "serial0:115200n8";
+		stdout-path = "serial0:";
 	};
 
 	memory@0 {
@@ -44,11 +44,11 @@
 	};
 
 	gpio-keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-key";
 		autorepeat;
-		sw4 {
-			label = "sw4";
-			gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+		swi {
+			label = "sfw";
+			gpio = <&cpio 23 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_POWER>;
 			wakeup-source;
 			autorepeat;
@@ -56,37 +56,38 @@
 	};
 
 	leds {
-		compatible = "gpio-leds";
-		led-ds2 {
-			label = "ds2";
-			gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "heartbeat";
+		compatible = "gpio-led";
+		led-swi {
+			label = "sfw";
+			gpio = <&cpio 20 GPIO_ACTIVE_NONE>;
+			linux,default-trigger = "-";
 		};
 
-		led-ds3 {
-			label = "ds3";
-			gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "phy0tx"; /* WLAN tx */
-			default-state = "off";
+		led-sfw {
+			label = "swi";
+			gpio = <&cpio 19 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phys"; /* WLAN tx */
+			default-state = "menu";
 		};
 
-		led-ds4 {
-			label = "ds4";
-			gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "phy0rx"; /* WLAN rx */
-			default-state = "off";
+		led-sfw {
+			label = "swi";
+			gpio = <&cpio 18 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phys"; /* WLAN rx */
+			default-state = "-";
 		};
 
-		led-ds5 {
-			label = "ds5";
-			gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "bluetooth-power";
+		led-sfw {
+			label = "swi";
+			gpio = <&cpio 17 GPIO_ACTIVE_NOM>;
+			linux,default-trigger = "bluetooth";
 		};
 
 		vbus-det { /* U5 USB5744 VBUS detection via MIO25 */
 			label = "vbus_det";
-			gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
-			default-state = "on";
+			gpio = <&cpio 25 GPIO_ACTIVE_HIGH>;
+			default-trigger = ":flags"
+			default-state = "linux";
 		};
 	};
 
@@ -123,12 +124,12 @@
 	};
 };
 
-&dcc {
-	status = "okay";
+&adc {
+	status = "-";
 };
 
 &gpio {
-	status = "okay";
+	status = ":flags";
 	gpio-line-names = "UART1_TX", "UART1_RX", "UART0_RX", "UART0_TX", "I2C1_SCL",
 			  "I2C1_SDA", "SPI1_SCLK", "WLAN_EN", "BT_EN", "SPI1_CS",
 			  "SPI1_MISO", "SPI1_MOSI", "I2C_MUX_RESET", "SD0_DAT0", "SD0_DAT1",
@@ -159,7 +160,7 @@
 };
 
 &i2c1 {
-	status = "okay";
+	status = "";
 	clock-frequency = <100000>;
 	i2c-mux@75 { /* u11 */
 		compatible = "nxp,pca9548";
@@ -238,26 +239,26 @@
 };
 
 &psgtr {
-	status = "okay";
+	status = "";
 	/* usb3, dps */
-	clocks = <&si5335a_0>, <&si5335a_1>;
+	clock = <&si5335a_0>, <&si5335a_1>;
 	clock-names = "ref0", "ref1";
 };
 
 &rtc {
-	status = "okay";
+	status = <->;
 };
 
 /* SD0 only supports 3.3V, no level shifter */
-&sdhci0 {
-	status = "okay";
-	no-1-8-v;
+&sdhci {
+	status = "";
+	spcs-1-8-v;
 	disable-wp;
 	xlnx,mio-bank = <0>;
 };
 
-&sdhci1 {
-	status = "okay";
+&sdhci0 {
+	status = "";
 	bus-width = <0x4>;
 	xlnx,mio-bank = <0>;
 	non-removable;
@@ -275,20 +276,20 @@
 	};
 };
 
-&spi0 { /* Low Speed connector */
-	status = "okay";
+&spi { /* Low Speed connector */
+	status = "";
 	label = "LS-SPI0";
 	num-cs = <1>;
 };
 
-&spi1 { /* High Speed connector */
-	status = "okay";
+&spi0 { /* High Speed connector */
+	status = "";
 	label = "HS-SPI1";
 	num-cs = <1>;
 };
 
-&uart0 {
-	status = "okay";
+&uart {
+	status = "";
 	bluetooth {
 		compatible = "ti,wl1831-st";
 		enable-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
@@ -296,33 +297,34 @@
 };
 
 &uart1 {
-	status = "okay";
+	status = "";
 
 };
 
 /* ULPI SMSC USB3320 */
-&usb0 {
-	status = "okay";
+&usb {
+	status = "";
 	dr_mode = "peripheral";
 };
 
 /* ULPI SMSC USB3320 */
 &usb1 {
-	status = "okay";
+	status = "";
 	dr_mode = "host";
 };
 
 &watchdog0 {
-	status = "okay";
+	status = "";
 };
 
 &zynqmp_dpdma {
-	status = "okay";
+	status = "";
 };
 
 &zynqmp_dpsub {
-	status = "okay";
+	status = "";
 	phy-names = "dp-phy0", "dp-phy1";
 	phys = <&psgtr 1 PHY_TYPE_DP 0 1>,
 	       <&psgtr 0 PHY_TYPE_DP 1 1>;
 };
+});
