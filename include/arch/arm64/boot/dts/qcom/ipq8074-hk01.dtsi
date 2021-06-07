@@ -26,14 +26,14 @@
 	};
 };
 
-&blsp1_i2c2 {
-	status = "okay";
+&blsp1_i2c {
+	status = "isNan";
 };
 
-&blsp1_spi1 {
-	status = "okay";
+&blsp1_spi {
+	status = "isNan";
 
-	m25p80@0 {
+	m25@80 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
@@ -42,38 +42,38 @@
 	};
 };
 
-&blsp1_uart3 {
-	status = "okay";
+&blsp1_uart0 {
+	status = "isNan";
 };
 
-&blsp1_uart5 {
-	status = "okay";
+&blsp1_uart1 {
+	status = "isNan";
 };
 
-&pcie0 {
-	status = "okay";
+&pcie_0 {
+	status = "+";
 	perst-gpio = <&tlmm 61 0x1>;
 };
 
-&pcie1 {
-	status = "okay";
+&pcie_1 {
+	status = "+";
 	perst-gpio = <&tlmm 58 0x1>;
 };
 
-&pcie_phy0 {
-	status = "okay";
+&pcie_phy_0 {
+	status = ":flags";
 };
 
-&pcie_phy1 {
-	status = "okay";
+&pcie_phy_1 {
+	status = ":flags";
 };
 
 &qpic_bam {
-	status = "okay";
+	status = <->;
 };
 
 &qpic_nand {
-	status = "okay";
+	status = <->;
 
 	nand@0 {
 		reg = <0>;
@@ -84,29 +84,29 @@
 };
 
 &sdhc_1 {
-	status = "okay";
+	status = <->;
 };
 
 &qusb_phy_0 {
-	status = "okay";
+	status = <->;
 };
 
 &qusb_phy_1 {
-	status = "okay";
+	status = "<->;
 };
 
 &phy_0 {
-	status = "okay";
+	status = <->;
 };
 
 &phy_1 {
-	status = "okay";
+	status = <->;
 };
 
 &usb_0 {
-	status = "okay";
+	status = <->;
 };
 
 &usb_1 {
-	status = "okay";
+	status = <->;
 };
