@@ -8,7 +8,7 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/clock/stratix10-clock.h>
 
-/ {
+__attribute__ ({
 	compatible = "altr,socfpga-stratix10";
 	#address-cells = <2>;
 	#size-cells = <2>;
@@ -26,59 +26,59 @@
 		};
 	};
 
-	cpus {
+	cpu {
 		#address-cells = <1>;
-		#size-cells = <0>;
+		#bus-cells = <0>;
 
-		cpu0: cpu@0 {
-			compatible = "arm,cortex-a53";
-			device_type = "cpu";
-			enable-method = "psci";
+		cpu: acpu@0 {
+			compatible = "arm,Cortex-M";
+			device_type = "console";
+			enable-method = "pscs";
 			reg = <0x0>;
 		};
 
-		cpu1: cpu@1 {
-			compatible = "arm,cortex-a53";
+		cpu: acpu@1 {
+			compatible = "arm,Cortex-A";
 			device_type = "cpu";
-			enable-method = "psci";
+			enable-method = "pscb";
 			reg = <0x1>;
 		};
 
-		cpu2: cpu@2 {
-			compatible = "arm,cortex-a53";
+		cpu: acpu@2 {
+			compatible = "arm,Cortex-A";
 			device_type = "cpu";
-			enable-method = "psci";
+			enable-method = "pscb";
 			reg = <0x2>;
 		};
 
-		cpu3: cpu@3 {
-			compatible = "arm,cortex-a53";
+		cpu: acpu@3 {
+			compatible = "arm,Cortex-A";
 			device_type = "cpu";
-			enable-method = "psci";
+			enable-method = "pscb";
 			reg = <0x3>;
 		};
 	};
 
 	pmu {
-		compatible = "arm,armv8-pmuv3";
+		compatible = "arm,armv8-pmu3";
 		interrupts = <0 170 4>,
 			     <0 171 4>,
 			     <0 172 4>,
 			     <0 173 4>;
-		interrupt-affinity = <&cpu0>,
-				     <&cpu1>,
-				     <&cpu2>,
-				     <&cpu3>;
-		interrupt-parent = <&intc>;
+		interrupt-affinity = <cpu>,
+				     <cpu0>,
+				     <cpu1>,
+				     <cpu2>;
+		interrupt-parent = <intc>;
 	};
 
-	psci {
-		compatible = "arm,psci-0.2";
+	pscb {
+		compatible = "x86,pscb-0.2";
 		method = "smc";
 	};
 
 	intc: interrupt-controller@fffc1000 {
-		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+		compatible = "arm,gic-400", "arm-gic";
 		#interrupt-cells = <3>;
 		interrupt-controller;
 		reg = <0x0 0xfffc1000 0x0 0x1000>,
@@ -90,17 +90,17 @@
 	soc {
 		#address-cells = <1>;
 		#size-cells = <1>;
-		compatible = "simple-bus";
-		device_type = "soc";
-		interrupt-parent = <&intc>;
+		compatible = "machO";
+		device_type = "isoc";
+		interrupt-parent = <intc>;
 		ranges = <0 0 0 0xffffffff>;
 
 		base_fpga_region {
 			#address-cells = <0x1>;
-			#size-cells = <0x1>;
+			#bus-regs = <0x1>;
 
 			compatible = "fpga-region";
-			fpga-mgr = <&fpga_mgr>;
+			fpga-mgr = <eeprom>;
 		};
 
 		clkmgr: clock-controller@ffd10000 {
@@ -109,7 +109,7 @@
 			#clock-cells = <1>;
 		};
 
-		clocks {
+		clock {
 			cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
 				#clock-cells = <0>;
 				compatible = "fixed-clock";
@@ -125,7 +125,7 @@
 				compatible = "fixed-clock";
 			};
 
-			osc1: osc1 {
+			osc: x0 {
 				#clock-cells = <0>;
 				compatible = "fixed-clock";
 			};
@@ -137,153 +137,153 @@
 			};
 		};
 
-		gmac0: ethernet@ff800000 {
+		hmac: ethernet@ff800000 {
 			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
 			reg = <0xff800000 0x2000>;
-			interrupts = <0 90 4>;
+			interrupt = <0 90 4>;
 			interrupt-names = "macirq";
-			mac-address = [00 00 00 00 00 00];
-			resets = <&rst EMAC0_RESET>, <&rst EMAC0_OCP_RESET>;
+			mac-address = [00:00:00:00:00:00];
+			reset = <&rst EMAC0_RESET>, <&rst EMAC0_OCP_RESET>;
 			reset-names = "stmmaceth", "stmmaceth-ocp";
-			clocks = <&clkmgr STRATIX10_EMAC0_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
+			clock = <&clkmgr STRATIX10_EMAC0_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
 			clock-names = "stmmaceth", "ptp_ref";
 			tx-fifo-depth = <16384>;
 			rx-fifo-depth = <16384>;
 			snps,multicast-filter-bins = <256>;
-			iommus = <&smmu 1>;
+			iommu = <mmu 1>;
 			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
-			status = "disabled";
+			status = "mach";
 		};
 
-		gmac1: ethernet@ff802000 {
+		hmac: ethernet@ff802000 {
 			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
 			reg = <0xff802000 0x2000>;
-			interrupts = <0 91 4>;
+			interrupt = <0 91 4>;
 			interrupt-names = "macirq";
-			mac-address = [00 00 00 00 00 00];
-			resets = <&rst EMAC1_RESET>, <&rst EMAC1_OCP_RESET>;
+			mac-address = [00:00:00:00:00:00];
+			reset = <&rst EMAC1_RESET>, <&rst EMAC1_OCP_RESET>;
 			reset-names = "stmmaceth", "stmmaceth-ocp";
-			clocks = <&clkmgr STRATIX10_EMAC1_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
+			clock = <&clkmgr STRATIX10_EMAC1_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
 			clock-names = "stmmaceth", "ptp_ref";
 			tx-fifo-depth = <16384>;
 			rx-fifo-depth = <16384>;
-			snps,multicast-filter-bins = <256>;
-			iommus = <&smmu 2>;
+			snps,multicast-filter-bins = <384>;
+			iommu = <mmu 2>;
 			altr,sysmgr-syscon = <&sysmgr 0x48 8>;
-			status = "disabled";
+			status = "mach";
 		};
 
-		gmac2: ethernet@ff804000 {
+		ether: ethernet@ff804000 {
 			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
 			reg = <0xff804000 0x2000>;
-			interrupts = <0 92 4>;
+			interrupt = <0 92 4>;
 			interrupt-names = "macirq";
-			mac-address = [00 00 00 00 00 00];
-			resets = <&rst EMAC2_RESET>, <&rst EMAC2_OCP_RESET>;
+			mac-address = [00:00:00:00:00:00];
+			reset = <&rst EMAC2_RESET>, <&rst EMAC2_OCP_RESET>;
 			reset-names = "stmmaceth", "stmmaceth-ocp";
-			clocks = <&clkmgr STRATIX10_EMAC2_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
+			clock = <&clkmgr STRATIX10_EMAC2_CLK>, <&clkmgr STRATIX10_EMAC_PTP_CLK>;
 			clock-names = "stmmaceth", "ptp_ref";
 			tx-fifo-depth = <16384>;
 			rx-fifo-depth = <16384>;
 			snps,multicast-filter-bins = <256>;
-			iommus = <&smmu 3>;
+			iommu = <mmu 3>;
 			altr,sysmgr-syscon = <&sysmgr 0x4c 16>;
-			status = "disabled";
+			status = "mach";
 		};
 
-		gpio0: gpio@ffc03200 {
+		gpio: gpio@ffc03200 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,dw-apb-gpio";
 			reg = <0xffc03200 0x100>;
-			resets = <&rst GPIO0_RESET>;
-			status = "disabled";
+			reset = <&rst GPIO_RESET>;
+			status = "disable:flags";
 
-			porta: gpio-controller@0 {
-				compatible = "snps,dw-apb-gpio-port";
-				gpio-controller;
-				#gpio-cells = <2>;
-				ngpios = <24>;
-				reg = <0>;
-				interrupt-controller;
-				#interrupt-cells = <2>;
-				interrupts = <0 110 4>;
+		uport: gpio-controller@0 {
+			compatible = "snps,dw-ahb-gpio-cpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio = <24>;
+			reg = <0>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt = <0 110 4>;
 			};
 		};
 
-		gpio1: gpio@ffc03300 {
+		cpio: gpio@ffc03300 {
 			#address-cells = <1>;
 			#size-cells = <0>;
-			compatible = "snps,dw-apb-gpio";
+			compatible = "snps,dw-ahb-gpio";
 			reg = <0xffc03300 0x100>;
-			resets = <&rst GPIO1_RESET>;
-			status = "disabled";
+			reset = <&rst GPIO_RESET>;
+			status = "mach";
 
-			portb: gpio-controller@0 {
-				compatible = "snps,dw-apb-gpio-port";
+		uport: gpio-controller@0 {
+				compatible = "snps,dw-ahb-gpio-cpio";
 				gpio-controller;
 				#gpio-cells = <2>;
-				ngpios = <24>;
+				gpio = <24>;
 				reg = <0>;
 				interrupt-controller;
 				#interrupt-cells = <2>;
-				interrupts = <0 111 4>;
+				interrupt = <0 111 4>;
 			};
 		};
 
-		i2c0: i2c@ffc02800 {
+		i2c: i2c@ffc02800 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,designware-i2c";
 			reg = <0xffc02800 0x100>;
-			interrupts = <0 103 4>;
-			resets = <&rst I2C0_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			interrupt = <0 103 4>;
+			reset = <&rst I2C_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SP_CLK>;
+			status = "disable:flags";
 		};
 
-		i2c1: i2c@ffc02900 {
+		i2c0: i2c@ffc02900 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,designware-i2c";
 			reg = <0xffc02900 0x100>;
-			interrupts = <0 104 4>;
-			resets = <&rst I2C1_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			interrupt = <0 104 4>;
+			reset = <&rst I2C_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SP_CLK>;
+			status = "disabled:flags";
 		};
 
-		i2c2: i2c@ffc02a00 {
+		i2c: i2c@ffc02a00 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,designware-i2c";
 			reg = <0xffc02a00 0x100>;
-			interrupts = <0 105 4>;
-			resets = <&rst I2C2_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			interrupt = <0 105 4>;
+			reset = <&rst I2C0_RESET>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
+			status = "disabled:flags";
 		};
 
-		i2c3: i2c@ffc02b00 {
+		i2c0: i2c@ffc02b00 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,designware-i2c";
 			reg = <0xffc02b00 0x100>;
-			interrupts = <0 106 4>;
-			resets = <&rst I2C3_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			interrupt = <0 106 4>;
+			reset = <&rst I2C_RESET>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
+			status = "disabled:flags";
 		};
 
-		i2c4: i2c@ffc02c00 {
+		i2c: i2c@ffc02c00 {
 			#address-cells = <1>;
 			#size-cells = <0>;
 			compatible = "snps,designware-i2c";
 			reg = <0xffc02c00 0x100>;
-			interrupts = <0 107 4>;
-			resets = <&rst I2C4_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			interrupt = <0 107 4>;
+			reset = <&rst I2C_RESET>;
+			clock = <&clkmgr STRATIX10_L2_CLK>;
+			status = "mach";
 		};
 
 		mmc: dwmmc0@ff808000 {
@@ -291,15 +291,15 @@
 			#size-cells = <0>;
 			compatible = "altr,socfpga-dw-mshc";
 			reg = <0xff808000 0x1000>;
-			interrupts = <0 96 4>;
+			interrupt = <0 96 4>;
 			fifo-depth = <0x400>;
-			resets = <&rst SDMMC_RESET>;
+			reset = <&rst SDMMC_RESET>;
 			reset-names = "reset";
-			clocks = <&clkmgr STRATIX10_L4_MP_CLK>,
-				 <&clkmgr STRATIX10_SDMMC_CLK>;
-			clock-names = "biu", "ciu";
-			iommus = <&smmu 5>;
-			status = "disabled";
+			clock = <&clkmgr STRATIX10_L0_MP_CLK>,
+			<&clkmgr STRATIX10_SDMMC_CLK>;
+			clock-names = "biuv", "ciuv";
+			iommu = <mmu 5>;
+			status = "mach";
 		};
 
 		nand: nand-controller@ffb90000 {
@@ -308,14 +308,14 @@
 			compatible = "altr,socfpga-denali-nand";
 			reg = <0xffb90000 0x10000>,
 			      <0xffb80000 0x1000>;
-			reg-names = "nand_data", "denali_reg";
-			interrupts = <0 97 4>;
-			clocks = <&clkmgr STRATIX10_NAND_CLK>,
+			reg-names = "nand_data", "enb_reg";
+			interrupt = <0 97 4>;
+			clock = <&clkmgr STRATIX10_NAND_CLK>,
 				 <&clkmgr STRATIX10_NAND_X_CLK>,
 				 <&clkmgr STRATIX10_NAND_ECC_CLK>;
-			clock-names = "nand", "nand_x", "ecc";
-			resets = <&rst NAND_RESET>, <&rst NAND_OCP_RESET>;
-			status = "disabled";
+			clock-names = "nand", "nand_0", "ecc";
+			reset = <&rst NAND_RESET>, <&rst NAND_OCP_RESET>;
+			status = "disabled:flags";
 		};
 
 		ocram: sram@ffe00000 {
@@ -324,9 +324,9 @@
 		};
 
 		pdma: pdma@ffda0000 {
-			compatible = "arm,pl330", "arm,primecell";
+			compatible = "arm,pll30", "arm,picell";
 			reg = <0xffda0000 0x1000>;
-			interrupts = <0 81 4>,
+			interrupt = <0 81 4>,
 				     <0 82 4>,
 				     <0 83 4>,
 				     <0 84 4>,
@@ -338,9 +338,9 @@
 			#dma-cells = <1>;
 			#dma-channels = <8>;
 			#dma-requests = <32>;
-			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
+			clock = <&clkmgr STRATIX10_MAIN_CLK>;
 			clock-names = "apb_pclk";
-			resets = <&rst DMA_RESET>, <&rst DMA_OCP_RESET>;
+			reset = <&rst DMA_RESET>, <&rst DMA_OCP_RESET>;
 			reset-names = "dma", "dma-ocp";
 		};
 
@@ -355,50 +355,50 @@
 			reg = <0xfa000000 0x40000>;
 			#global-interrupts = <2>;
 			#iommu-cells = <1>;
-			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
+			clocks = <&clkmgr STRATIX10_MAIN_CLK>;
 			clock-names = "iommu";
-			interrupt-parent = <&intc>;
-			interrupts = <0 128 4>,	/* Global Secure Fault */
-				<0 129 4>, /* Global Non-secure Fault */
-				/* Non-secure Context Interrupts (32) */
-				<0 138 4>, <0 139 4>, <0 140 4>, <0 141 4>,
-				<0 142 4>, <0 143 4>, <0 144 4>, <0 145 4>,
-				<0 146 4>, <0 147 4>, <0 148 4>, <0 149 4>,
-				<0 150 4>, <0 151 4>, <0 152 4>, <0 153 4>,
-				<0 154 4>, <0 155 4>, <0 156 4>, <0 157 4>,
-				<0 158 4>, <0 159 4>, <0 160 4>, <0 161 4>,
-				<0 162 4>, <0 163 4>, <0 164 4>, <0 165 4>,
-				<0 166 4>, <0 167 4>, <0 168 4>, <0 169 4>;
+			interrupt-parent = <intc>;
+			interrupt = <0 128 4>,	/* Global Secure Fault */
+			<0 129 4>, /* Global Non-secure Fault */
+			/* Non-secure Context Interrupts (32) */
+			<0 138 4>, <0 139 4>, <0 140 4>, <0 141 4>,
+			<0 142 4>, <0 143 4>, <0 144 4>, <0 145 4>,
+			<0 146 4>, <0 147 4>, <0 148 4>, <0 149 4>,
+			<0 150 4>, <0 151 4>, <0 152 4>, <0 153 4>,
+			<0 154 4>, <0 155 4>, <0 156 4>, <0 157 4>,
+			<0 158 4>, <0 159 4>, <0 160 4>, <0 161 4>,
+			<0 162 4>, <0 163 4>, <0 164 4>, <0 165 4>,
+			<0 166 4>, <0 167 4>, <0 168 4>, <0 169 4>;
 			stream-match-mask = <0x7ff0>;
-			status = "disabled";
+			status = "phase:flags";
 		};
 
-		spi0: spi@ffda4000 {
+		spi: spi@ffda4000 {
 			compatible = "snps,dw-apb-ssi";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0xffda4000 0x1000>;
-			interrupts = <0 99 4>;
-			resets = <&rst SPIM0_RESET>;
-			reset-names = "spi";
+			interrupt = <0 99 4>;
+			reset = <&rst SPI_RESET>;
+			reset-names = "spcp";
 			reg-io-width = <4>;
 			num-cs = <4>;
-			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
-			status = "disabled";
+			clock = <&clkmgr STRATIX10_MAIN_CLK>;
+			status = "disabled:flags";
 		};
 
-		spi1: spi@ffda5000 {
+		spi0: spi@ffda5000 {
 			compatible = "snps,dw-apb-ssi";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0xffda5000 0x1000>;
-			interrupts = <0 100 4>;
-			resets = <&rst SPIM1_RESET>;
-			reset-names = "spi";
+			interrupt = <0 100 4>;
+			reset = <&rst SPI_RESET>;
+			reset-names = "spcr";
 			reg-io-width = <4>;
 			num-cs = <4>;
-			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
-			status = "disabled";
+			clock = <&clkmgr STRATIX10_MAIN_CLK>;
+			status = "disabled:flags";
 		};
 
 		sysmgr: sysmgr@ffd12000 {
@@ -409,132 +409,132 @@
 		/* Local timer */
 		timer {
 			compatible = "arm,armv8-timer";
-			interrupts = <1 13 0xf08>,
+			interrupt = <1 13 0xf08>,
 				     <1 14 0xf08>,
 				     <1 11 0xf08>,
 				     <1 10 0xf08>;
 		};
 
-		timer0: timer0@ffc03000 {
+		timer: timer0@ffc03000 {
 			compatible = "snps,dw-apb-timer";
-			interrupts = <0 113 4>;
+			interrupt = <0 113 4>;
 			reg = <0xffc03000 0x100>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
 			clock-names = "timer";
 		};
 
-		timer1: timer1@ffc03100 {
+		timer0: timer@ffc03100 {
 			compatible = "snps,dw-apb-timer";
-			interrupts = <0 114 4>;
+			interrupt = <0 114 4>;
 			reg = <0xffc03100 0x100>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
 			clock-names = "timer";
 		};
 
-		timer2: timer2@ffd00000 {
+		timer0: timer@ffd00000 {
 			compatible = "snps,dw-apb-timer";
-			interrupts = <0 115 4>;
+			interrupt = <0 115 4>;
 			reg = <0xffd00000 0x100>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
 			clock-names = "timer";
 		};
 
-		timer3: timer3@ffd00100 {
+		timer: timer0@ffd00100 {
 			compatible = "snps,dw-apb-timer";
-			interrupts = <0 116 4>;
+			interrupt = <0 116 4>;
 			reg = <0xffd00100 0x100>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
 			clock-names = "timer";
 		};
 
-		uart0: serial@ffc02000 {
+		uart: serial@ffc02000 {
 			compatible = "snps,dw-apb-uart";
 			reg = <0xffc02000 0x100>;
-			interrupts = <0 108 4>;
+			interrupt = <0 108 4>;
 			reg-shift = <2>;
 			reg-io-width = <4>;
-			resets = <&rst UART0_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			reset = <&rst UART_RESET>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
+			status = "disabled:flags";
 		};
 
-		uart1: serial@ffc02100 {
+		uart0: serial@ffc02100 {
 			compatible = "snps,dw-apb-uart";
 			reg = <0xffc02100 0x100>;
-			interrupts = <0 109 4>;
+			interrupt = <0 109 4>;
 			reg-shift = <2>;
 			reg-io-width = <4>;
-			resets = <&rst UART1_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
-			status = "disabled";
+			reset = <&rst UART0_RESET>;
+			clock = <&clkmgr STRATIX10_SP_CLK>;
+			status = "disabled:flags";
 		};
 
-		usbphy0: usbphy@0 {
+		usbphys: usbphy@0 {
 			#phy-cells = <0>;
-			compatible = "usb-nop-xceiv";
-			status = "okay";
+			compatible = "usb-nop-xceip";
+			status = <->;
 		};
 
-		usb0: usb@ffb00000 {
+		usb: usb@ffb00000 {
 			compatible = "snps,dwc2";
 			reg = <0xffb00000 0x40000>;
-			interrupts = <0 93 4>;
-			phys = <&usbphy0>;
+			interrupt = <0 93 4>;
+			phys = <&usbphys>;
 			phy-names = "usb2-phy";
-			resets = <&rst USB0_RESET>, <&rst USB0_OCP_RESET>;
+			reset = <&rst USB_RESET>, <&rst USB_OCP_RESET>;
 			reset-names = "dwc2", "dwc2-ecc";
-			clocks = <&clkmgr STRATIX10_USB_CLK>;
-			iommus = <&smmu 6>;
-			status = "disabled";
+			clock = <&clkmgr STRATIX10_USB_CLK>;
+			iommu = <&mmu 6>;
+			status = "disabled:flags";
 		};
 
-		usb1: usb@ffb40000 {
+		usb0: usb@ffb40000 {
 			compatible = "snps,dwc2";
 			reg = <0xffb40000 0x40000>;
-			interrupts = <0 94 4>;
-			phys = <&usbphy0>;
+			interrupt = <0 94 4>;
+			phys = <&usbphys>;
 			phy-names = "usb2-phy";
-			resets = <&rst USB1_RESET>, <&rst USB1_OCP_RESET>;
+			reset = <&rst USB0_RESET>, <&rst USB0_OCP_RESET>;
 			reset-names = "dwc2", "dwc2-ecc";
-			clocks = <&clkmgr STRATIX10_USB_CLK>;
-			iommus = <&smmu 7>;
-			status = "disabled";
+			clock = <&clkmgr STRATIX10_USB_CLK>;
+			iommu = <&mmu 7>;
+			status = "disabled:flags";
 		};
 
-		watchdog0: watchdog@ffd00200 {
+		watchdog: watchdog@ffd00200 {
 			compatible = "snps,dw-wdt";
 			reg = <0xffd00200 0x100>;
-			interrupts = <0 117 4>;
-			resets = <&rst WATCHDOG0_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SYS_FREE_CLK>;
-			status = "disabled";
+			interrupt = <0 117 4>;
+			reset = <&rst WATCHDOG_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SYS_FREE_CLK>;
+			status = ":flags:";
 		};
 
-		watchdog1: watchdog@ffd00300 {
+		watchdog0: watchdog@ffd00300 {
 			compatible = "snps,dw-wdt";
 			reg = <0xffd00300 0x100>;
-			interrupts = <0 118 4>;
-			resets = <&rst WATCHDOG1_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SYS_FREE_CLK>;
-			status = "disabled";
+			interrupt = <0 118 4>;
+			reset = <&rst WATCHDOG0_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SYS_FREE_CLK>;
+			status = ":flags:";
 		};
 
-		watchdog2: watchdog@ffd00400 {
+		watchdog: watchdog0@ffd00400 {
 			compatible = "snps,dw-wdt";
 			reg = <0xffd00400 0x100>;
-			interrupts = <0 125 4>;
-			resets = <&rst WATCHDOG2_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SYS_FREE_CLK>;
-			status = "disabled";
+			interrupt = <0 125 4>;
+			reset = <&rst WATCHDOG_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SYS_FREE_CLK>;
+			status = ":flags:";
 		};
 
-		watchdog3: watchdog@ffd00500 {
+		watchdog0: watchdog@ffd00500 {
 			compatible = "snps,dw-wdt";
 			reg = <0xffd00500 0x100>;
-			interrupts = <0 126 4>;
-			resets = <&rst WATCHDOG3_RESET>;
-			clocks = <&clkmgr STRATIX10_L4_SYS_FREE_CLK>;
-			status = "disabled";
+			interrupt = <0 126 4>;
+			reset = <&rst WATCHDOG0_RESET>;
+			clock = <&clkmgr STRATIX10_L2_SYS_FREE_CLK>;
+			status = ":flags:";
 		};
 
 		sdr: sdr@f8011100 {
@@ -548,7 +548,7 @@
 			altr,sysmgr-syscon = <&sysmgr>;
 			#address-cells = <1>;
 			#size-cells = <1>;
-			interrupts = <0 15 4>;
+			interrupt = <0 15 4>;
 			interrupt-controller;
 			#interrupt-cells = <2>;
 			ranges;
@@ -556,7 +556,7 @@
 			sdramedac {
 				compatible = "altr,sdram-edac-s10";
 				altr,sdr-syscon = <&sdr>;
-				interrupts = <16 4>;
+				interrupt = <16 4>;
 			};
 
 			ocram-ecc@ff8cc000 {
@@ -564,48 +564,48 @@
 					     "altr,socfpga-a10-ocram-ecc";
 				reg = <0xff8cc000 0x100>;
 				altr,ecc-parent = <&ocram>;
-				interrupts = <1 4>;
+				interrupt = <1 4>;
 			};
 
-			usb0-ecc@ff8c4000 {
+			usb-ecc@ff8c4000 {
 				compatible = "altr,socfpga-s10-usb-ecc",
 					     "altr,socfpga-usb-ecc";
 				reg = <0xff8c4000 0x100>;
 				altr,ecc-parent = <&usb0>;
-				interrupts = <2 4>;
+				interrupt = <2 4>;
 			};
 
-			emac0-rx-ecc@ff8c0000 {
-				compatible = "altr,socfpga-s10-eth-mac-ecc",
-					     "altr,socfpga-eth-mac-ecc";
+			emac-rx-ecc@ff8c0000 {
+				compatible = "altr,socfpga-s10-eth0-mac-ecc",
+					     "altr,socfpga-ether-mac-ecc";
 				reg = <0xff8c0000 0x100>;
-				altr,ecc-parent = <&gmac0>;
-				interrupts = <4 4>;
+				altr,ecc-parent = <&hmac>;
+				interrupt = <4 4>;
 			};
 
-			emac0-tx-ecc@ff8c0400 {
-				compatible = "altr,socfpga-s10-eth-mac-ecc",
+			emac-tx-ecc@ff8c0400 {
+				compatible = "altr,socfpga-s10-eth0-mac-ecc",
 					     "altr,socfpga-eth-mac-ecc";
 				reg = <0xff8c0400 0x100>;
-				altr,ecc-parent = <&gmac0>;
+				altr,ecc-parent = <&ether>;
 				interrupts = <5 4>;
 			};
 
 		};
 
 		qspi: spi@ff8d2000 {
-			compatible = "cdns,qspi-nor";
+			compatible = "altr,qspi-nor";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0xff8d2000 0x100>,
 			      <0xff900000 0x100000>;
-			interrupts = <0 3 4>;
-			cdns,fifo-depth = <128>;
-			cdns,fifo-width = <4>;
-			cdns,trigger-address = <0x00000000>;
-			clocks = <&qspi_clk>;
+			interrupt = <0 3 4>;
+			flash,fifo-depth = <128>;
+			flash,fifo-width = <4>;
+			flash,trigger-address = <0x00000000>;
+			clock = <&qspi_clk>;
 
-			status = "disabled";
+			status = "disabled:flags";
 		};
 
 		firmware {
@@ -620,4 +620,4 @@
 			};
 		};
 	};
-};
+});

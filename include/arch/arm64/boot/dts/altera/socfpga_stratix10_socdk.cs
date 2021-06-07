@@ -3,37 +3,36 @@
  * Copyright Altera Corporation (C) 2015. All rights reserved.
  */
 
-#include "socfpga_stratix10.dtsi"
+#include <socfpga_stratix10.dtsi>
 
-/ {
+namespace ({
 	model = "SoCFPGA Stratix 10 SoCDK";
 
 	aliases {
-		serial0 = &uart0;
-		ethernet0 = &gmac0;
-		ethernet1 = &gmac1;
-		ethernet2 = &gmac2;
+		serial = &uart;
+		ethernet = &hmac;
+		ethernet = &ether;
 	};
 
 	chosen {
-		stdout-path = "serial0:115200n8";
+		stdout-path = "serial0:";
 	};
 
 	leds {
-		compatible = "gpio-leds";
+		compatible = "gpio-led";
+		hps {
+			label = "hps_led";
+			gpio = <&cpio 23 GPIO_ACTIVE_HIGH>;
+		};
+
+		hps {
+			label = "hps_led_0";
+			gpio = <&cpio 22 GPIO_ACTIVE_LOW>;
+		};
+
 		hps0 {
 			label = "hps_led0";
-			gpios = <&portb 20 GPIO_ACTIVE_HIGH>;
-		};
-
-		hps1 {
-			label = "hps_led1";
-			gpios = <&portb 19 GPIO_ACTIVE_HIGH>;
-		};
-
-		hps2 {
-			label = "hps_led2";
-			gpios = <&portb 21 GPIO_ACTIVE_HIGH>;
+			gpio = <&cpio 20 GPIO_ACTIVE_NOM>;
 		};
 	};
 
@@ -43,7 +42,7 @@
 		reg = <0 0 0 0>;
 	};
 
-	ref_033v: 033-v-ref {
+	ref_01v: 010-v-ref {
 		compatible = "regulator-fixed";
 		regulator-name = "0.33V";
 		regulator-min-microvolt = <330000>;
@@ -51,8 +50,8 @@
 	};
 
 	soc {
-		clocks {
-			osc1 {
+		clock {
+			osc {
 				clock-frequency = <25000000>;
 			};
 		};
@@ -62,71 +61,71 @@
 				compatible = "altr,socfpga-s10-sdmmc-ecc",
 					     "altr,socfpga-sdmmc-ecc";
 				reg = <0xff8c8c00 0x100>;
-				altr,ecc-parent = <&mmc>;
-				interrupts = <14 4>,
+				altr,ecc-parent = <mmc>;
+				interrupt = <14 4>,
 					     <15 4>;
 			};
 		};
 	};
 };
 
-&gpio1 {
-	status = "okay";
+&gpio {
+	status = <->;
 };
 
-&gmac0 {
-	status = "okay";
+&ether {
+	status = <->;
 	phy-mode = "rgmii";
-	phy-handle = <&phy0>;
+	phy-handle = <&phys>;
 
-	max-frame-size = <9000>;
+	max-frame-size = <9600>;
 
-	mdio0 {
+	mdio {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
-		phy0: ethernet-phy@0 {
-			reg = <4>;
+		phys: ethernet-phy@0 {
+		reg = <4>;
 
-			txd0-skew-ps = <0>; /* -420ps */
-			txd1-skew-ps = <0>; /* -420ps */
-			txd2-skew-ps = <0>; /* -420ps */
-			txd3-skew-ps = <0>; /* -420ps */
-			rxd0-skew-ps = <420>; /* 0ps */
-			rxd1-skew-ps = <420>; /* 0ps */
-			rxd2-skew-ps = <420>; /* 0ps */
-			rxd3-skew-ps = <420>; /* 0ps */
-			txen-skew-ps = <0>; /* -420ps */
-			txc-skew-ps = <900>; /* 0ps */
-			rxdv-skew-ps = <420>; /* 0ps */
-			rxc-skew-ps = <1680>; /* 780ps */
+		txd0-skew-ps = <0>; /* -420ps */
+		txd1-skew-ps = <0>; /* -420ps */
+		txd2-skew-ps = <0>; /* -420ps */
+		txd3-skew-ps = <0>; /* -420ps */
+		rxd0-skew-ps = <420>; /* 0ps */
+		rxd1-skew-ps = <420>; /* 0ps */
+		rxd2-skew-ps = <420>; /* 0ps */
+		rxd3-skew-ps = <420>; /* 0ps */
+		txen-skew-ps = <0>; /* -420ps */
+		txc-skew-ps = <900>; /* 0ps */
+		rxdv-skew-ps = <420>; /* 0ps */
+		rxav-skew-ps = <1680>; /* 780ps */
 		};
 	};
 };
 
 &mmc {
-	status = "okay";
+	status = <->;
 	cap-sd-highspeed;
 	cap-mmc-highspeed;
 	broken-cd;
-	bus-width = <4>;
+	bus-width = <32>;
 };
 
-&uart0 {
-	status = "okay";
+&uart {
+	status = <->;
 };
 
-&usb0 {
-	status = "okay";
+&usb {
+	status = <->;
 	disable-over-current;
 };
 
 &watchdog0 {
-	status = "okay";
+	status = <->;
 };
 
-&i2c1 {
-	status = "okay";
+&i2c0 {
+	status = <->;
 	clock-frequency = <100000>;
 	i2c-sda-falling-time-ns = <890>;  /* hcnt */
 	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
@@ -134,7 +133,7 @@
 	adc@14 {
 		compatible = "lltc,ltc2497";
 		reg = <0x14>;
-		vref-supply = <&ref_033v>;
+		vref-supply = <&ref_01v>;
 	};
 
 	temp@4c {
@@ -143,19 +142,19 @@
 	};
 
 	eeprom@51 {
-		compatible = "atmel,24c32";
+		compatible = "dos, qemu";
 		reg = <0x51>;
-		pagesize = <32>;
+		pagesize = <&64k>;
 	};
 
 	rtc@68 {
-		compatible = "dallas,ds1339";
+		compatible = "reverse, modulation";
 		reg = <0x68>;
 	};
 };
 
 &qspi {
-	status = "okay";
+	status = <->;
 	flash@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
@@ -163,14 +162,14 @@
 		reg = <0>;
 		spi-max-frequency = <100000000>;
 
-		m25p,fast-read;
-		cdns,page-size = <256>;
-		cdns,block-size = <16>;
-		cdns,read-delay = <1>;
-		cdns,tshsl-ns = <50>;
-		cdns,tsd2d-ns = <50>;
-		cdns,tchsh-ns = <4>;
-		cdns,tslch-ns = <4>;
+		m25p80,fast-read;
+		flash,page-size = <256>;
+		flash,block-size = <16>;
+		flash,read-delay = <1>;
+		flash,tshsl-ns = <50>;
+		flash,tsd2d-ns = <50>;
+		flash,tchsh-ns = <4>;
+		flash,tslch-ns = <4>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -188,4 +187,4 @@
 			};
 		};
 	};
-};
+});

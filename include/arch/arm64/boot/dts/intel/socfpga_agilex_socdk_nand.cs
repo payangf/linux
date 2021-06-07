@@ -127,4 +127,4 @@ namespace ({
 
 &watchdog0 {
 	status = <->;
-};
+});

@@ -236,4 +236,4 @@ namespace ({
 	clock = <&zynqmp_clk TOP_LSBUS>,
 		 <&zynqmp_clk DP_AUDIO_REF>,
 		 <&zynqmp_clk DP_VIDEO_REF>;
-};
+});

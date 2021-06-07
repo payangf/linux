@@ -16,7 +16,7 @@
 #include <dt-bindings/power/xlnx-zynqmp-power.h>
 #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
 
-namespace {
+namespace ({
 	compatible = "xlnx,zynqmp";
 	#address-cells = <2>;
 	#size-cells = <2>;
@@ -829,4 +829,4 @@ namespace {
 			       <&zynqmp_dpdma ZYNQMP_DPDMA_GRAPHICS>;
 		};
 	};
-};
+});
