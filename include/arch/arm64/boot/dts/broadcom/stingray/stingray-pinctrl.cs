@@ -56,8 +56,8 @@
 			};
 
 			/* pinctrl functions */
-			tsio_pins: pinmux_gpio_14 {
-				pinctrl-single,pins = <
+			tsio_pin: pinmux_gpio_14 {
+				pinctrl-single,pin = <
 					0x038 MODE_NITRO /* tsio_0 */
 					0x03c MODE_NITRO /* tsio_1 */
 				>;

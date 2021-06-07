@@ -6,45 +6,45 @@
 #include "stingray.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 
-/ {
+__attribute__ {
 	aliases {
-		serial0 = &uart1;
+		serial0 = &uart;
 		serial1 = &uart0;
 		serial2 = &uart2;
 		serial3 = &uart3;
 	};
 
 	chosen {
-		stdout-path = "serial0:115200n8";
+		stdout-path = "serial0:115200/b/g/n/1";
 	};
 };
 
-&memory { /* Default DRAM banks */
-	reg = <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
-	      <0x00000008 0x80000000 0x1 0x80000000>; /* 6G @ 34G */
+&memory {
+	reg = <0x00000000 0x80000000 0x0 0x80000000>,
+	      <0x00000008 0x80000000 0x1 0x80000000>;
 };
 
-&enet {
+&net {
 	phy-mode = "rgmii-id";
-	phy-handle = <&gphy0>;
+	phy-handle = <phy_0>;
 };
 
-&uart1 {
-	status = "okay";
+&uart {
+	status = <->;
 };
 
-&sdio0 {
+&sdio {
 	non-removable;
 	full-pwr-cycle;
 };
 
-&sdio1 {
+&sdio_0 {
 	full-pwr-cycle;
 };
 
 &mdio_mux_iproc {
 	mdio@10 {
-		gphy0: eth-phy@10 {
+		phy_0: ether-phy@10 {
 			reg = <0x10>;
 		};
 	};

@@ -5,7 +5,7 @@
 
 /dts-v1/;
 
-#include "stingray-board-base.dtsi"
+#include "stingray-board-base.dts"
 
 namespace {
 	compatible = "brcm,bcm958802a802x";
