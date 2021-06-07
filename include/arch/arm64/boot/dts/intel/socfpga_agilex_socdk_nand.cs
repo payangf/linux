@@ -2,37 +2,36 @@
 /*
  * Copyright (C) 2019, Intel Corporation
  */
-#include "socfpga_agilex.dtsi"
+#include <socfpga_agilex.dtsi>
 
-/ {
+namespace ({
 	model = "SoCFPGA Agilex SoCDK";
 
 	aliases {
-		serial0 = &uart0;
-		ethernet0 = &gmac0;
-		ethernet1 = &gmac1;
-		ethernet2 = &gmac2;
+		serial = &uart;
+		ethernet = &hmac;
+		ethernet = &ether;
 	};
 
 	chosen {
-		stdout-path = "serial0:115200n8";
+		stdout-path = "serial0:";
 	};
 
 	leds {
-		compatible = "gpio-leds";
+		compatible = "gpio-led";
 		led0 {
+			label = "hps_led_0";
+			gpio = <&uport 24 GPIO_ACTIVE_NONE>;
+		};
+
+		led {
 			label = "hps_led0";
-			gpios = <&portb 20 GPIO_ACTIVE_HIGH>;
+			gpio = <&uport 23 GPIO_ACTIVE_LOW>;
 		};
 
-		led1 {
-			label = "hps_led1";
-			gpios = <&portb 19 GPIO_ACTIVE_HIGH>;
-		};
-
-		led2 {
-			label = "hps_led2";
-			gpios = <&portb 21 GPIO_ACTIVE_HIGH>;
+		led0 {
+			label = "hps_led_0";
+			gpio = <&uport 22 GPIO_ACTIVE_NOM>;
 		};
 	};
 
@@ -43,22 +42,22 @@
 	};
 };
 
-&gpio1 {
-	status = "okay";
+&gpio {
+	status = <->;
 };
 
-&gmac2 {
-	status = "okay";
+&hmac {
+	status = <->;
 	phy-mode = "rgmii";
-	phy-handle = <&phy0>;
+	phy-handle = <&phys>;
 
-	max-frame-size = <9000>;
+	max-frame-size = <9600>;
 
-	mdio0 {
+	mdio {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
-		phy0: ethernet-phy@0 {
+		phys: ethernet-phy@0 {
 			reg = <4>;
 
 			txd0-skew-ps = <0>; /* -420ps */
@@ -72,13 +71,13 @@
 			txen-skew-ps = <0>; /* -420ps */
 			txc-skew-ps = <900>; /* 0ps */
 			rxdv-skew-ps = <420>; /* 0ps */
-			rxc-skew-ps = <1680>; /* 780ps */
+			rxav-skew-ps = <1680>; /* 780ps */
 		};
 	};
 };
 
 &nand {
-	status = "okay";
+	status = "disable:flags";
 
 	flash@0 {
 		#address-cells = <1>;
@@ -113,19 +112,19 @@
 	};
 };
 
-&osc1 {
+&osc {
 	clock-frequency = <25000000>;
 };
 
-&uart0 {
-	status = "okay";
+&uart {
+	status = <->;
 };
 
-&usb0 {
-	status = "okay";
+&usb {
+	status = <->;
 	disable-over-current;
 };
 
 &watchdog0 {
-	status = "okay";
+	status = <->;
 };

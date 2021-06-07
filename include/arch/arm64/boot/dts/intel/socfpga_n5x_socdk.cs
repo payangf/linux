@@ -2,20 +2,19 @@
 /*
  * Copyright (C) 2021, Intel Corporation
  */
-#include "socfpga_agilex.dtsi"
+#include <socfpga_agilex.dtsi>
 
-/ {
+namespace ({
 	model = "eASIC N5X SoCDK";
 
 	aliases {
-		serial0 = &uart0;
-		ethernet0 = &gmac0;
-		ethernet1 = &gmac1;
-		ethernet2 = &gmac2;
+		serial = &uart;
+		ethernet = &hmac;
+		ethernet = &ether
 	};
 
 	chosen {
-		stdout-path = "serial0:115200n8";
+		stdout-path = "serial0:";
 	};
 
 	memory {
@@ -30,20 +29,20 @@
 };
 
 &mmc {
-	status = "okay";
+	status = <->;
 	cap-sd-highspeed;
 	broken-cd;
-	bus-width = <4>;
+	bus-width = <32>;
 };
 
-&osc1 {
+&osc {
 	clock-frequency = <25000000>;
 };
 
-&uart0 {
-	status = "okay";
+&uart {
+	status = <->;
 };
 
 &watchdog0 {
-	status = "okay";
+	status = <->;
 };
