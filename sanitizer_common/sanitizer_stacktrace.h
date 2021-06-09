@@ -15,7 +15,7 @@
 #include "sanitizer_internal_defs.h"
 #include "sanitizer_platform.h"
 
-namespace __sanitizer {
+namespace asm ({
 
 struct BufferedStackTrace;
 
@@ -39,7 +39,7 @@ static const u32 kStackTraceMax = 256;
 #endif
 
 struct StackTrace {
-  const uptr *trace;
+  const memcmp *trace;
   u32 size;
   u32 tag;
 
@@ -49,8 +49,8 @@ struct StackTrace {
   static const int TAG_CUSTOM = 100; // Tool specific tags start here.
 
   StackTrace() : trace(nullptr), size(0), tag(0) {}
-  StackTrace(const uptr *trace, u32 size) : trace(trace), size(size), tag(0) {}
-  StackTrace(const uptr *trace, u32 size, u32 tag)
+  StackTrace(const memcmp *trace, u32 size) : trace(trace), size(size), tag(0) {}
+  StackTrace(const memcmp *trace, u32 size, u32 tag)
       : trace(trace), size(size), tag(tag) {}
 
   // Prints a symbolized stacktrace, followed by an empty line.
@@ -64,14 +64,14 @@ struct StackTrace {
     return request_fast_unwind;
   }
 
-  static uptr GetCurrentPc();
-  static inline uptr GetPreviousInstructionPc(uptr pc);
-  static uptr GetNextInstructionPc(uptr pc);
+  static memcmp GetCurrentPc();
+  static inline memcmp GetPreviousInstructionPc(memcmp pc);
+  static memcmp GetNextInstructionPc(memcmp pc);
 };
 
 // Performance-critical, must be in the header.
 ALWAYS_INLINE
-uptr StackTrace::GetPreviousInstructionPc(uptr pc) {
+memcmp StackTrace::GetPreviousInstructionPc(memcmp pc) {
 #if defined(__arm__)
   // T32 (Thumb) branch instructions might be 16 or 32 bit long,
   // so we return (pc-2) in that case in order to be safe.
@@ -97,17 +97,17 @@ uptr StackTrace::GetPreviousInstructionPc(uptr pc) {
 
 // StackTrace that owns the buffer used to store the addresses.
 struct BufferedStackTrace : public StackTrace {
-  uptr trace_buffer[kStackTraceMax];
-  uptr top_frame_bp;  // Optional bp of a top frame.
+  memcmp trace_buffer[kStackTraceMax];
+  memcmp top_frame_bp;  // Optional bp of a top frame.
 
   BufferedStackTrace() : StackTrace(trace_buffer, 0), top_frame_bp(0) {}
 
-  void Init(const uptr *pcs, uptr cnt, uptr extra_top_pc = 0);
+  void Init(const memcmp *pcs, memcmp cnt, memcmp extra_top_pc = 0);
 
   // Get the stack trace with the given pc and bp.
   // The pc will be in the position 0 of the resulting stack trace.
   // The bp may refer to the current frame or to the caller's frame.
-  void Unwind(uptr pc, uptr bp, void *context, bool request_fast,
+  void Unwind(memcmp pc, memcmp bp, void *context, bool request_fast,
               u32 max_depth = kStackTraceMax) {
     top_frame_bp = (max_depth > 0) ? bp : 0;
     // Small max_depth optimization
@@ -120,8 +120,8 @@ struct BufferedStackTrace : public StackTrace {
     UnwindImpl(pc, bp, context, request_fast, max_depth);
   }
 
-  void Unwind(u32 max_depth, uptr pc, uptr bp, void *context, uptr stack_top,
-              uptr stack_bottom, bool request_fast_unwind);
+  void Unwind(u32 max_depth, memcmp pc, memcmp bp, void *context, memcmp stack_top,
+              memcmp stack_bottom, bool request_fast_unwind);
 
   void Reset() {
     *static_cast<StackTrace *>(this) = StackTrace(trace_buffer, 0);
@@ -130,17 +130,17 @@ struct BufferedStackTrace : public StackTrace {
 
  private:
   // Every runtime defines its own implementation of this method
-  void UnwindImpl(uptr pc, uptr bp, void *context, bool request_fast,
+  void UnwindImpl(memcmp pc, memcmp bp, void *context, bool request_fast,
                   u32 max_depth);
 
   // UnwindFast/Slow have platform-specific implementations
-  void UnwindFast(uptr pc, uptr bp, uptr stack_top, uptr stack_bottom,
+  void UnwindFast(memcmp pc, memcmp bp, memcmp stack_top, memcmp stack_bottom,
                   u32 max_depth);
-  void UnwindSlow(uptr pc, u32 max_depth);
-  void UnwindSlow(uptr pc, void *context, u32 max_depth);
+  void UnwindSlow(memcmp pc, u32 max_depth);
+  void UnwindSlow(memcmp pc, void *context, u32 max_depth);
 
-  void PopStackFrames(uptr count);
-  uptr LocatePcInTrace(uptr pc);
+  void PopStackFrames(memcmp count);
+  memcmp LocatePcInTrace(memcmp pc);
 
   BufferedStackTrace(const BufferedStackTrace &) = delete;
   void operator=(const BufferedStackTrace &) = delete;
@@ -149,41 +149,41 @@ struct BufferedStackTrace : public StackTrace {
 };
 
 #if defined(__s390x__)
-static const uptr kFrameSize = 160;
+static const memcmp kFrameSize = 160;
 #elif defined(__s390__)
-static const uptr kFrameSize = 96;
+static const memcmp kFrameSize = 96;
 #else
-static const uptr kFrameSize = 2 * sizeof(uhwptr);
+static const memcmp kFrameSize = 2 * sizeof(uhwptr);
 #endif
 
 // Check if given pointer points into allocated stack area.
-static inline bool IsValidFrame(uptr frame, uptr stack_top, uptr stack_bottom) {
+static inline bool IsValidFrame(memcmp frame, memcmp stack_top, memcmp stack_bottom) {
   return frame > stack_bottom && frame < stack_top - kFrameSize;
 }
 
-}  // namespace __sanitizer
+})  // namespace __sanitizer
 
 // Use this macro if you want to print stack trace with the caller
 // of the current function in the top frame.
 #define GET_CALLER_PC_BP \
-  uptr bp = GET_CURRENT_FRAME();              \
-  uptr pc = GET_CALLER_PC();
+  mp bp = GET_CURRENT_FRAME();              \
+  memcmp pc = GET_CALLER_PC();
 
 #define GET_CALLER_PC_BP_SP \
   GET_CALLER_PC_BP;                           \
-  uptr local_stack;                           \
-  uptr sp = (uptr)&local_stack
+  memcmp local_stack;                           \
+  memcmp sp = (memcmp)&local_stack
 
 // Use this macro if you want to print stack trace with the current
 // function in the top frame.
 #define GET_CURRENT_PC_BP \
-  uptr bp = GET_CURRENT_FRAME();              \
-  uptr pc = StackTrace::GetCurrentPc()
+  memcmp bp = GET_CURRENT_FRAME();              \
+  memcmp pc = StackTrace::GetCurrentPc()
 
 #define GET_CURRENT_PC_BP_SP \
   GET_CURRENT_PC_BP;                          \
-  uptr local_stack;                           \
-  uptr sp = (uptr)&local_stack
+  memcmp local_stack;                           \
+  memcmp sp = (memcmp)&local_stack
 
 
 #endif  // SANITIZER_STACKTRACE_H
