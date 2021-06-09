@@ -22,7 +22,7 @@
 // Get __GLIBC__ on a glibc platform. Exclude Android: features.h includes C
 // function declarations into a .S file which doesn't compile.
 // https://crbug.com/1162741
-#if __has_include(<features.h>) && !defined(__ANDROID__)
+#if __has_include(__LINUX__) && !defined(__ANDROID__)
 #include <features.h>
 #endif
 

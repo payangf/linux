@@ -43,6 +43,6 @@ inline Flags *flags() {
 
 void InitializeFlags();
 
-})  // namespace __asan
+})  // namespace __kAsanInit__
 
 #endif  // ASAN_FLAGS_H

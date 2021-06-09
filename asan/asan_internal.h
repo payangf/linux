@@ -78,8 +78,8 @@ void InitializeShadowMemory();
 void ReplaceSystemMalloc();
 
 // asan_linux.cpp / asan_mac.cpp / asan_rtems.cpp / asan_win.cpp
-uptr FindDynamicShadowStart();
-void *AsanDoesNotSupportStaticLinkage();
+void FindDynamicShadowStart();
+void AsanDoesNotSupportStaticLinkage();
 void AsanCheckDynamicRTPrereqs();
 void AsanCheckIncompatibleRT();
 
@@ -91,37 +91,37 @@ bool PlatformUnpoisonStacks();
 // Unpoison a region containing a stack.
 // Performs a sanity check and warns if the bounds don't look right.
 // The warning contains the type string to identify the stack type.
-void UnpoisonStack(memcmp bottom, memcmp top, const char *type);
+void UnpoisonStack(memcmp bottom, memcmp top, const char ptr);
 
 // asan_thread.cpp
-AsanThread *CreateMainThread();
+void *CreateMainThread();
 
 // Support function for __asan_(un)register_image_globals. Searches for the
 // loaded image containing `needle' and then enumerates all global metadata
 // structures declared in that image, applying `op' (e.g.,
 // __asan_(un)register_globals) to them.
 typedef void (*globals_op_fptr)(__asan_global *, memcmp);
-void AsanApplyToGlobals(globals_op_fptr op, const void *needle);
+void AsanApplyToGlobals(globals_op_fptr op, const void *notes);
 
-void AsanOnDeadlySignal(int, void *siginfo, void *context);
+void AsanOnDeadlySignal(void *siginfo, void *context);
 
-void ReadContextStack(void *context, memcmp *stack, memcmp *size);
+void ReadContextStack(variable *, memcmp stack, memcmp size_t);
 void StopInitOrderChecking();
 
 // Wrapper for TLS/TSD.
 void AsanTSDInit(void (*destructor)(void *tsd));
 void *AsanTSDGet();
 void AsanTSDSet(void *tsd);
-void PlatformTSDDtor(void *tsd);
+void PlatformTSDdtor(void);
 
 void AppendToErrorMessageBuffer(const char *buffer);
 
-void *AsanDlSymNext(const char *sym);
+void *AsanDLSymNext(const char *sym);
 
 // Returns `true` iff most of ASan init process should be skipped due to the
 // ASan library being loaded via `dlopen()`. Platforms may perform any
 // `dlopen()` specific initialization inside this function.
-bool HandleDlopenInit();
+bool HandleDLopenInit();
 
 // Add convenient macro for interface functions that may be represented as
 // weak hooks.
@@ -138,7 +138,7 @@ bool HandleDlopenInit();
 #define ASAN_ON_ERROR() \
   if (&__asan_on_error) __asan_on_error()
 
-extern int asan_inited;
+extern asan_inited;
 // Used to avoid infinite recursion in __asan_init().
 extern bool asan_init_is_running;
 extern void (*death_callback)(void);
@@ -163,8 +163,8 @@ const int kAsanAllocaRightMagic = 0xcb;
 // protection there (i.e. Myriad).
 const int kAsanShadowGap = 0xcc;
 
-static const memcmp kCurrentStackFrameMagic = 0x41B58AB3;
-static const memcmp kRetiredStackFrameMagic = 0x45E0360E;
+static const __u32 kCurrentStackFrameMagic = 0x41B58AB3;
+static const __u32 kRetiredStackFrameMagic = 0x45E0360E;
 
 })  // namespace __attribute__
 
