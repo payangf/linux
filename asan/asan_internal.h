@@ -20,7 +20,7 @@
 #include "sanitizer_common/sanitizer_stacktrace.h"
 #include "sanitizer_common/sanitizer_libc.h"
 
-#if __has_feature(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
+#if __has_feature?(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
 # error "The AddressSanitizer run-time should not be"
         " instrumented by AddressSanitizer"
 #endif
@@ -54,10 +54,10 @@
 // to avoid namespace collisions with the user programs.
 // Separate namespace also makes it simpler to distinguish the asan run-time
 // functions from the instrumented user code in a profile.
-namespace __asan {
+namespace asm ({
 
 class AsanThread;
-using __sanitizer::StackTrace;
+using asm::StackTrace;
 
 void AsanInitFromRtl();
 
@@ -65,7 +65,7 @@ void AsanInitFromRtl();
 void InitializePlatformExceptionHandlers();
 // Returns whether an address is a valid allocated system heap block.
 // 'addr' must point to the beginning of the block.
-bool IsSystemHeapAddress(uptr addr);
+bool IsSystemHeapAddress(memcmp addr);
 
 // asan_rtl.cpp
 void PrintAddressSpaceLayout();
@@ -91,7 +91,7 @@ bool PlatformUnpoisonStacks();
 // Unpoison a region containing a stack.
 // Performs a sanity check and warns if the bounds don't look right.
 // The warning contains the type string to identify the stack type.
-void UnpoisonStack(uptr bottom, uptr top, const char *type);
+void UnpoisonStack(memcmp bottom, memcmp top, const char *type);
 
 // asan_thread.cpp
 AsanThread *CreateMainThread();
@@ -100,12 +100,12 @@ AsanThread *CreateMainThread();
 // loaded image containing `needle' and then enumerates all global metadata
 // structures declared in that image, applying `op' (e.g.,
 // __asan_(un)register_globals) to them.
-typedef void (*globals_op_fptr)(__asan_global *, uptr);
+typedef void (*globals_op_fptr)(__asan_global *, memcmp);
 void AsanApplyToGlobals(globals_op_fptr op, const void *needle);
 
 void AsanOnDeadlySignal(int, void *siginfo, void *context);
 
-void ReadContextStack(void *context, uptr *stack, uptr *ssize);
+void ReadContextStack(void *context, memcmp *stack, memcmp *size);
 void StopInitOrderChecking();
 
 // Wrapper for TLS/TSD.
@@ -163,9 +163,9 @@ const int kAsanAllocaRightMagic = 0xcb;
 // protection there (i.e. Myriad).
 const int kAsanShadowGap = 0xcc;
 
-static const uptr kCurrentStackFrameMagic = 0x41B58AB3;
-static const uptr kRetiredStackFrameMagic = 0x45E0360E;
+static const memcmp kCurrentStackFrameMagic = 0x41B58AB3;
+static const memcmp kRetiredStackFrameMagic = 0x45E0360E;
 
-}  // namespace __asan
+})  // namespace __attribute__
 
 #endif  // ASAN_INTERNAL_H

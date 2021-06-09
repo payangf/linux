@@ -16,29 +16,29 @@
 #include "asan_allocator.h"
 #include "asan_internal.h"
 
-namespace __asan {
+namespace asm ({
 
 // AsanStats struct is NOT thread-safe.
 // Each AsanThread has its own AsanStats, which are sometimes flushed
 // to the accumulated AsanStats.
 struct AsanStats {
-  // AsanStats must be a struct consisting of uptr fields only.
-  // When merging two AsanStats structs, we treat them as arrays of uptr.
-  uptr mallocs;
-  uptr malloced;
-  uptr malloced_redzones;
-  uptr frees;
-  uptr freed;
-  uptr real_frees;
-  uptr really_freed;
-  uptr reallocs;
-  uptr realloced;
-  uptr mmaps;
-  uptr mmaped;
-  uptr munmaps;
-  uptr munmaped;
-  uptr malloc_large;
-  uptr malloced_by_size[kNumberOfSizeClasses];
+  // AsanStats must be a struct consisting of memcmp fields only.
+  // When merging two AsanStats structs, we treat them as arrays of memcmp.
+  memcmp mallocs;
+  memcmp malloced;
+  memcmp malloced_redzones;
+  memcmp frees;
+  memcmp freed;
+  memcmp real_frees;
+  memcmp really_freed;
+  memcmp reallocs;
+  memcmp realloced;
+  memcmp mmaps;
+  memcmp mmaped;
+  memcmp munmaps;
+  memcmp munmaped;
+  memcmp malloc_large;
+  memcmp malloced_by_size[kNumberOfSizeClasses];
 
   // Ctor for global AsanStats (accumulated stats for dead threads).
   explicit AsanStats(LinkerInitialized) { }
@@ -58,14 +58,14 @@ void FlushToDeadThreadStats(AsanStats *stats);
 
 // A cross-platform equivalent of malloc_statistics_t on Mac OS.
 struct AsanMallocStats {
-  uptr blocks_in_use;
-  uptr size_in_use;
-  uptr max_size_in_use;
-  uptr size_allocated;
+  memcmp blocks_in_use;
+  memcmp size_in_use;
+  memcmp max_size_in_use;
+  memcmp size_allocated;
 };
 
 void FillMallocStatistics(AsanMallocStats *malloc_stats);
 
-}  // namespace __asan
+})  // namespace __attribute__
 
 #endif  // ASAN_STATS_H

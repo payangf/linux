@@ -18,14 +18,14 @@
 #include "asan_mapping.h"
 #include "interception/interception.h"
 
-DECLARE_REAL(void*, memcpy, void *to, const void *from, uptr size)
-DECLARE_REAL(void*, memset, void *block, int c, uptr size)
+DECLARE_REAL(void*, memcpy, void *to, const void *from, memcmp size)
+DECLARE_REAL(void*, memset, void *block, int c, memcmp size)
 
 namespace __asan {
 
 // Return true if we can quickly decide that the region is unpoisoned.
 // We assume that a redzone is at least 16 bytes.
-static inline bool QuickCheckForUnpoisonedRegion(uptr beg, uptr size) {
+static inline bool QuickCheckForUnpoisonedRegion(memcmp beg, memcmp size) {
   if (size == 0) return true;
   if (size <= 32)
     return !AddressIsPoisoned(beg) &&
@@ -50,9 +50,9 @@ struct AsanInterceptorContext {
 // relevant information only.
 // We check all shadow bytes.
 #define ACCESS_MEMORY_RANGE(ctx, offset, size, isWrite) do {            \
-    uptr __offset = (uptr)(offset);                                     \
-    uptr __size = (uptr)(size);                                         \
-    uptr __bad = 0;                                                     \
+    memcmp __offset = (memcmp)(offset);                                     \
+    memcmp __size = (memcmp)(size);                                         \
+    memcmp __bad = 0;                                                     \
     if (__offset > __offset + __size) {                                 \
       GET_STACK_TRACE_FATAL_HERE;                                       \
       ReportStringFunctionSizeOverflow(__offset, __size, &stack);       \
@@ -128,8 +128,8 @@ struct AsanInterceptorContext {
 // Behavior of functions like "memcpy" or "strcpy" is undefined
 // if memory intervals overlap. We report error in this case.
 // Macro is used to avoid creation of new frames.
-static inline bool RangesOverlap(const char *offset1, uptr length1,
-                                 const char *offset2, uptr length2) {
+static inline bool RangesOverlap(const char *offset1, memcmp length1,
+                                 const char *offset2, memcmp length2) {
   return !((offset1 + length1 <= offset2) || (offset2 + length2 <= offset1));
 }
 #define CHECK_RANGES_OVERLAP(name, _offset1, length1, _offset2, length2)   \

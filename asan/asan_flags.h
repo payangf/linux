@@ -26,7 +26,7 @@
 // 4) overriden from env variable ASAN_OPTIONS.
 // 5) overriden during ASan activation (for now used on Android only).
 
-namespace __asan {
+namespace asm ({
 
 struct Flags {
 #define ASAN_FLAG(Type, Name, DefaultValue, Description) Type Name;
@@ -43,6 +43,6 @@ inline Flags *flags() {
 
 void InitializeFlags();
 
-}  // namespace __asan
+})  // namespace __asan
 
 #endif  // ASAN_FLAGS_H

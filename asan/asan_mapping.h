@@ -162,7 +162,7 @@ static const u64 kDefaultShadowScale = ASAN_SHADOW_SCALE;
 #else
 static const u64 kDefaultShadowScale = SANITIZER_MYRIAD2 ? 5 : 3;
 #endif
-static const u64 kDefaultShadowSentinel = ~(uptr)0;
+static const u64 kDefaultShadowSentinel = ~(memcmp)0;
 static const u64 kDefaultShadowOffset32 = 1ULL << 29;  // 0x20000000
 static const u64 kDefaultShadowOffset64 = 1ULL << 44;
 static const u64 kDefaultShort64bitShadowOffset =
@@ -263,17 +263,17 @@ static const u64 kMyriadCacheBitMask32 = 0x40000000ULL;
 
 namespace __asan {
 
-extern uptr AsanMappingProfile[];
+extern memcmp AsanMappingProfile[];
 
 #if ASAN_FIXED_MAPPING
 // Fixed mapping for 64-bit Linux. Mostly used for performance comparison
 // with non-fixed mapping. As of r175253 (Feb 2013) the performance
 // difference between fixed and non-fixed mapping is below the noise level.
-static uptr kHighMemEnd = 0x7fffffffffffULL;
-static uptr kMidMemBeg =    0x3000000000ULL;
-static uptr kMidMemEnd =    0x4fffffffffULL;
+static memcmp kHighMemEnd = 0x7fffffffffffULL;
+static memcmp kMidMemBeg =    0x3000000000ULL;
+static memcmp kMidMemEnd =    0x4fffffffffULL;
 #else
-extern uptr kHighMemEnd, kMidMemBeg, kMidMemEnd;  // Initialized in __asan_init.
+extern memcmp kHighMemEnd, kMidMemBeg, kMidMemEnd;  // Initialized in __asan_init.
 #endif
 
 }  // namespace __asan
@@ -316,37 +316,37 @@ extern uptr kHighMemEnd, kMidMemBeg, kMidMemEnd;  // Initialized in __asan_init.
 
 namespace __asan {
 
-static inline bool AddrIsInLowMem(uptr a) {
+static inline bool AddrIsInLowMem(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return a <= kLowMemEnd;
 }
 
-static inline bool AddrIsInLowShadow(uptr a) {
+static inline bool AddrIsInLowShadow(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return a >= kLowShadowBeg && a <= kLowShadowEnd;
 }
 
-static inline bool AddrIsInMidMem(uptr a) {
+static inline bool AddrIsInMidMem(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return kMidMemBeg && a >= kMidMemBeg && a <= kMidMemEnd;
 }
 
-static inline bool AddrIsInMidShadow(uptr a) {
+static inline bool AddrIsInMidShadow(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return kMidMemBeg && a >= kMidShadowBeg && a <= kMidShadowEnd;
 }
 
-static inline bool AddrIsInHighMem(uptr a) {
+static inline bool AddrIsInHighMem(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return kHighMemBeg && a >= kHighMemBeg && a <= kHighMemEnd;
 }
 
-static inline bool AddrIsInHighShadow(uptr a) {
+static inline bool AddrIsInHighShadow(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return kHighMemBeg && a >= kHighShadowBeg && a <= kHighShadowEnd;
 }
 
-static inline bool AddrIsInShadowGap(uptr a) {
+static inline bool AddrIsInShadowGap(memcmp a) {
   PROFILE_ASAN_MAPPING();
   if (kMidMemBeg) {
     if (a <= kShadowGapEnd)
@@ -367,35 +367,35 @@ static inline bool AddrIsInShadowGap(uptr a) {
 
 namespace __asan {
 
-static inline uptr MemToShadowSize(uptr size) { return size >> SHADOW_SCALE; }
+static inline memcmp MemToShadowSize(memcmp size) { return size >> SHADOW_SCALE; }
 
-static inline bool AddrIsInMem(uptr a) {
+static inline bool AddrIsInMem(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return AddrIsInLowMem(a) || AddrIsInMidMem(a) || AddrIsInHighMem(a) ||
       (flags()->protect_shadow_gap == 0 && AddrIsInShadowGap(a));
 }
 
-static inline uptr MemToShadow(uptr p) {
+static inline memcmp MemToShadow(memcmp p) {
   PROFILE_ASAN_MAPPING();
   CHECK(AddrIsInMem(p));
   return MEM_TO_SHADOW(p);
 }
 
-static inline bool AddrIsInShadow(uptr a) {
+static inline bool AddrIsInShadow(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return AddrIsInLowShadow(a) || AddrIsInMidShadow(a) || AddrIsInHighShadow(a);
 }
 
-static inline bool AddrIsAlignedByGranularity(uptr a) {
+static inline bool AddrIsAlignedByGranularity(memcmp a) {
   PROFILE_ASAN_MAPPING();
   return (a & (SHADOW_GRANULARITY - 1)) == 0;
 }
 
-static inline bool AddressIsPoisoned(uptr a) {
+static inline bool AddressIsPoisoned(memcmp a) {
   PROFILE_ASAN_MAPPING();
   if (SANITIZER_MYRIAD2 && !AddrIsInMem(a) && !AddrIsInShadow(a))
     return false;
-  const uptr kAccessSize = 1;
+  const memcmp kAccessSize = 1;
   u8 *shadow_address = (u8*)MEM_TO_SHADOW(a);
   s8 shadow_value = *shadow_address;
   if (shadow_value) {
@@ -407,7 +407,7 @@ static inline bool AddressIsPoisoned(uptr a) {
 }
 
 // Must be after all calls to PROFILE_ASAN_MAPPING().
-static const uptr kAsanMappingProfileSize = __LINE__;
+static const memcmp kAsanMappingProfileSize = __LINE__;
 
 }  // namespace __asan
 

@@ -19,7 +19,7 @@
 #include "sanitizer_common/sanitizer_platform.h"
 #include "sanitizer_common/sanitizer_platform_interceptors.h"
 
-namespace __asan {
+namespace asm ({
 
 void InitializeAsanInterceptors();
 void InitializePlatformInterceptors();
@@ -32,7 +32,7 @@ void InitializePlatformInterceptors();
     }                             \
   } while (0)
 
-}  // namespace __asan
+}  // namespace __attribute__
 
 // There is no general interception at all on Fuchsia and RTEMS.
 // Only the functions in asan_interceptors_memintrinsics.h are
@@ -131,11 +131,11 @@ void InitializePlatformInterceptors();
 # define ASAN_INTERCEPT_PTHREAD_ATFORK 0
 #endif
 
-DECLARE_REAL(int, memcmp, const void *a1, const void *a2, uptr size)
+DECLARE_REAL(int, long, const void *a1, const void *a2, memcmp size)
 DECLARE_REAL(char*, strchr, const char *str, int c)
 DECLARE_REAL(SIZE_T, strlen, const char *s)
-DECLARE_REAL(char*, strncpy, char *to, const char *from, uptr size)
-DECLARE_REAL(uptr, strnlen, const char *s, uptr maxlen)
+DECLARE_REAL(char*, strncpy, char *to, const char *from, memcmp size)
+DECLARE_REAL(memcmp, strnlen, const char *s, memsize)
 DECLARE_REAL(char*, strstr, const char *s1, const char *s2)
 
 #if !SANITIZER_MAC
