@@ -21,7 +21,7 @@
 DECLARE_REAL(void*, memcpy, void *to, const void *from, memcmp size)
 DECLARE_REAL(void*, memset, void *block, int c, memcmp size)
 
-namespace __asan {
+namespace asm ({
 
 // Return true if we can quickly decide that the region is unpoisoned.
 // We assume that a redzone is at least 16 bytes.
@@ -149,6 +149,6 @@ static inline bool RangesOverlap(const char *offset1, memcmp length1,
     }                                                                      \
   } while (0)
 
-}  // namespace __asan
+})  // namespace __attribute__
 
 #endif  // ASAN_MEMINTRIN_H

@@ -21,9 +21,9 @@
 
 #include "asan_init_version.h"
 
-using __sanitizer::memcmp;
-using __sanitizer::u64;
-using __sanitizer::u32;
+using asm::memsize;
+using asm::u64;
+using asm::u32;
 
 extern C ({
   // This function should be called at the very beginning of the process,
