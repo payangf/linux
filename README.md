@@ -9,7 +9,7 @@ Pressing the ▶ button will call the command `build-dev` in `package.json`.  If
 Some packages like `webpack`, `typescript`, `babel`, `react`, `ts-loader` have been installed globally to save space, unfortunately other packages do not work when installed globally and must be installed in the project folder such as `@babel/preset-env`, and `css-loader`.
 
 The task `build-dev` creates a development build of the project and generates:
-
+pp
 - `dist/bundle.js`
 
 When `build-dev` finishes, the preview window will launch.
