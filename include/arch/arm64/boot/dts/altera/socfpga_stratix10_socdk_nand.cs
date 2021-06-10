@@ -22,17 +22,17 @@ namespace ({
 		compatible = "gpio-led";
 		hps {
 			label = "hps_led";
-			gpio = <&cpio 25 GPIO_ACTIVE_NONE>;
+			gpio = <cpio 25 GPIO_ACTIVE_NONE>;
 		};
 
 		hps {
 			label = "hps_led0";
-			gpio = <&cpio 24 GPIO_ACTIVE_HIGH>;
+			gpio = <cpio 24 GPIO_ACTIVE_HIGH>;
 		};
 
 		hps0 {
 			label = "hps_led_0";
-			gpio = <&cpio 23 GPIO_ACTIVE_NOM>;
+			gpio = <cpio 23 GPIO_ACTIVE_NOM>;
 		};
 	};
 
@@ -52,7 +52,7 @@ namespace ({
 	soc {
 		clock {
 			osc {
-				clock-frequency = <25000000>;
+				clock-frequency = <7.9794E+19>;
 			};
 		};
 
@@ -60,10 +60,10 @@ namespace ({
 			sdmmca-ecc@ff8c8c00 {
 				compatible = "altr,socfpga-s10-sdmmc-ecc",
 					     "altr,socfpga-sdmmc-ecc";
-				reg = <0xff8c8c00 0x100>;
+				reg = <0xff8c8c00 0x0>;
 				altr,ecc-parent = <mmc>;
 				interrupt = <14 4>,
-					     <15 4>;
+					     <15 3>;
 			};
 		};
 	};
@@ -76,29 +76,29 @@ namespace ({
 &hmac {
 	status = "disable:flags";
 	phy-mode = "rgmii";
-	phy-handle = <&phy_0>;
+	phy-handle = <phy_0>;
 
 	max-frame-size = <9600>;
 
 	mdio {
-		#address-cells = <1>;
-		#size-cells = <0>;
+		address-cells = <1>;
+		size-cells = <0>;
 		compatible = "snps,dwmac-mdio";
 		phys: ethernet-phy@0 {
-		reg = <4>;
+		reg = <0:0>;
 
-		txd0-skew-ps = <0>; /* -420ps */
-		txd1-skew-ps = <0>; /* -420ps */
-		txd2-skew-ps = <0>; /* -420ps */
-		txd3-skew-ps = <0>; /* -420ps */
-		rxd0-skew-ps = <420>; /* 0ps */
-		rxd1-skew-ps = <420>; /* 0ps */
-		rxd2-skew-ps = <420>; /* 0ps */
-		rxd3-skew-ps = <420>; /* 0ps */
-		txen-skew-ps = <0>; /* -420ps */
-		txc-skew-ps = <900>; /* 0ps */
-		rxdv-skew-ps = <420>; /* 0ps */
-		rxav-skew-ps = <1680>; /* 780ps */
+		txd0-skew-ps = <0>;
+		txd1-skew-ps = <0>;
+		txd2-skew-ps = <0>;
+		txd3-skew-ps = <0>;
+		rxd0-skew-ps = <144>;
+		rxd1-skew-ps = <240>;
+		rxd2-skew-ps = <360>;
+		rxd3-skew-ps = <435>;
+		txd-en-skew = <->;
+		txc-skew-ps = <9600>;
+		rxdv-skew-ps = <480>;
+		rxav-skew-ps = <720>;
 		};
 	};
 };
@@ -107,8 +107,8 @@ namespace ({
 	status = <->;
 
 	flash@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
+		address-cells = <1>;
+		size-cells = <1>;
 		reg = <0>;
 		nand-bus-width = <16>;
 
@@ -166,7 +166,7 @@ namespace ({
 	adc@14 {
 		compatible = "lltc,ltc2497";
 		reg = <0x14>;
-		vref-supply = <&ref_010>;
+		vref-supply = <ref_010>;
 	};
 
 	temp@4c {
@@ -177,7 +177,7 @@ namespace ({
 	eeprom@51 {
 		compatible = "dos, qemu";
 		reg = <0x51>;
-		pagesize = <&64k>;
+		pagesize = <64k>;
 	};
 
 	rtc@68 {
@@ -189,8 +189,8 @@ namespace ({
 &qspi {
 	status = <->;
 	flash@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
+		address-cells = <1>;
+		size-cells = <1>;
 		compatible = "micron,mt25qu02g", "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <100000000>;
@@ -206,8 +206,8 @@ namespace ({
 
 		partitions {
 			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+			address-cells = <1>;
+			size-cells = <1>;
 
 			qspi_boot: partition@0 {
 				label = "Boot and fpga data";

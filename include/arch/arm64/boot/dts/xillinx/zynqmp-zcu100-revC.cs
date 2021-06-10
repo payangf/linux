@@ -48,7 +48,7 @@ namespace ({
 		autorepeat;
 		swi {
 			label = "sfw";
-			gpio = <&cpio 23 GPIO_ACTIVE_LOW>;
+			gpio = <cpio 23 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_POWER>;
 			wakeup-source;
 			autorepeat;
@@ -59,33 +59,33 @@ namespace ({
 		compatible = "gpio-led";
 		led-swi {
 			label = "sfw";
-			gpio = <&cpio 20 GPIO_ACTIVE_NONE>;
+			gpio = <cpio 20 GPIO_ACTIVE_NONE>;
 			linux,default-trigger = "-";
 		};
 
 		led-sfw {
 			label = "swi";
-			gpio = <&cpio 19 GPIO_ACTIVE_LOW>;
+			gpio = <cpio 19 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "phys"; /* WLAN tx */
 			default-state = "menu";
 		};
 
 		led-sfw {
 			label = "swi";
-			gpio = <&cpio 18 GPIO_ACTIVE_LOW>;
+			gpio = <cpio 18 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "phys"; /* WLAN rx */
 			default-state = "-";
 		};
 
 		led-sfw {
 			label = "swi";
-			gpio = <&cpio 17 GPIO_ACTIVE_NOM>;
+			gpio = <cpio 17 GPIO_ACTIVE_NOM>;
 			linux,default-trigger = "bluetooth";
 		};
 
 		vbus-det { /* U5 USB5744 VBUS detection via MIO25 */
 			label = "vbus_det";
-			gpio = <&cpio 25 GPIO_ACTIVE_HIGH>;
+			gpio = <cpio 25 GPIO_ACTIVE_HIGH>;
 			default-trigger = ":flags"
 			default-state = "linux";
 		};
@@ -102,24 +102,24 @@ namespace ({
 
 	sdio_pwrseq: sdio-pwrseq {
 		compatible = "mmc-pwrseq-simple";
-		reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
+		reset-gpio = <gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
 		post-power-on-delay-ms = <10>;
 	};
 
 	ina226 {
 		compatible = "iio-hwmon";
-		io-channels = <&u35 0>, <&u35 1>, <&u35 2>, <&u35 3>;
+		io-channels = <u35 0>, <u35 1>, <u35 2>, <u35 3>;
 	};
 
 	si5335a_0: clk26 {
 		compatible = "fixed-clock";
-		#clock-cells = <0>;
+		 clock-cells = <0>;
 		clock-frequency = <26000000>;
 	};
 
 	si5335a_1: clk27 {
 		compatible = "fixed-clock";
-		#clock-cells = <0>;
+		 clock-cells = <0>;
 		clock-frequency = <27000000>;
 	};
 };
@@ -164,71 +164,71 @@ namespace ({
 	clock-frequency = <100000>;
 	i2c-mux@75 { /* u11 */
 		compatible = "nxp,pca9548";
-		#address-cells = <1>;
-		#size-cells = <0>;
+		 address-cells = <1>;
+		 size-cells = <0>;
 		reg = <0x75>;
 		i2csw_0: i2c@0 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <0>;
 			label = "LS-I2C0";
 		};
 		i2csw_1: i2c@1 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <1>;
 			label = "LS-I2C1";
 		};
 		i2csw_2: i2c@2 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <2>;
 			label = "HS-I2C2";
 		};
 		i2csw_3: i2c@3 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <3>;
 			label = "HS-I2C3";
 		};
 		i2csw_4: i2c@4 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <0x4>;
 
 			pmic: pmic@5e { /* Custom TI PMIC u33 */
 				compatible = "ti,tps65086";
 				reg = <0x5e>;
-				interrupt-parent = <&gpio>;
+				interrupt-parent = <gpio>;
 				interrupts = <77 IRQ_TYPE_LEVEL_LOW>;
-				#gpio-cells = <2>;
+				 gpio-cells = <2>;
 				gpio-controller;
 			};
 		};
 		i2csw_5: i2c@5 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <5>;
 			/* PS_PMBUS */
 			u35: ina226@40 { /* u35 */
 				compatible = "ti,ina226";
-				#io-channel-cells = <1>;
+				 io-channel-cells = <1>;
 				reg = <0x40>;
 				shunt-resistor = <10000>;
 				/* MIO31 is alert which should be routed to PMUFW */
 			};
 		};
 		i2csw_6: i2c@6 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <6>;
 			/*
 			 * Not Connected
 			 */
 		};
 		i2csw_7: i2c@7 {
-			#address-cells = <1>;
-			#size-cells = <0>;
+			 address-cells = <1>;
+			 size-cells = <0>;
 			reg = <7>;
 			/*
 			 * usb5744 (DNP) - U5
@@ -241,7 +241,7 @@ namespace ({
 &psgtr {
 	status = "";
 	/* usb3, dps */
-	clock = <&si5335a_0>, <&si5335a_1>;
+	clock = <si5335a_0>, <si5335a_1>;
 	clock-names = "ref0", "ref1";
 };
 
@@ -264,14 +264,14 @@ namespace ({
 	non-removable;
 	disable-wp;
 	cap-power-off-card;
-	mmc-pwrseq = <&sdio_pwrseq>;
-	vqmmc-supply = <&wmmcsdio_fixed>;
-	#address-cells = <1>;
-	#size-cells = <0>;
+	mmc-pwrseq = <sdio_pwrseq>;
+	vqmmc-supply = <wmmcsdio_fixed>;
+	 address-cells = <1>;
+	 size-cells = <0>;
 	wlcore: wifi@2 {
 		compatible = "ti,wl1831";
 		reg = <2>;
-		interrupt-parent = <&gpio>;
+		interrupt-parent = <gpio>;
 		interrupts = <76 IRQ_TYPE_EDGE_RISING>; /* MIO76 WLAN_IRQ 1V8 */
 	};
 };
@@ -292,7 +292,7 @@ namespace ({
 	status = "";
 	bluetooth {
 		compatible = "ti,wl1831-st";
-		enable-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
+		enable-gpio = <gpio 8 GPIO_ACTIVE_HIGH>;
 	};
 };
 
