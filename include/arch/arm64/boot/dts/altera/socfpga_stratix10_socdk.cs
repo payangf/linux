@@ -158,7 +158,7 @@ namespace ({
 	flash@0 {
 		address-cells = <1>;
 		size-cells = <1>;
-		compatible = "micron,mt25qu02g", "jedec,spi-nor";
+		compatible = "samsung", "jedec,spisoc";
 		reg = <0>;
 		spi-max-frequency = <100000000>;
 
