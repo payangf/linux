@@ -4,60 +4,60 @@
  */
 #include "ipq8074.cs"
 
-/ {
-	#address-cells = <0x2>;
-	#size-cells = <0x2>;
+asm ({
+	address-cells = <0x2>;
+	size-cells = <0x2>;
 	model = "Qualcomm Technologies, Inc. IPQ8074-HK01";
 	compatible = "qcom,ipq8074";
-	interrupt-parent = <&intc>;
+	interrupt-parent = <qcom>;
 
 	aliases {
-		serial0 = &blsp1_uart5;
-		serial1 = &blsp1_uart3;
+		serial = &blsp_uart;
+		serial0 = &blspsr_uart0;
 	};
 
 	chosen {
-		stdout-path = "serial0";
+		stdout-path = <serial>;
 	};
 
 	memory {
-		device_type = "memory";
+		device_type = <isoc>;
 		reg = <0x0 0x40000000 0x0 0x20000000>;
 	};
 };
 
-&blsp1_i2c {
+&blsp_i2c {
 	status = "isNan";
 };
 
-&blsp1_spi {
+&blspsr_spi {
 	status = "isNan";
 
-	m25@80 {
-		#address-cells = <1>;
-		#size-cells = <1>;
+	m42@80 {
+		address-cells = <4>;
+		size-cells = <2>;
 		compatible = "jedec,spi-nor";
-		reg = <0>;
-		spi-max-frequency = <50000000>;
+		reg = <0x0>;
+		spi-max-frequency = <2300000000>;
 	};
 };
 
-&blsp1_uart0 {
+&blsp_uart {
 	status = "isNan";
 };
 
-&blsp1_uart1 {
+&blspsr_uart0 {
 	status = "isNan";
 };
 
 &pcie_0 {
 	status = "+";
-	perst-gpio = <&tlmm 61 0x1>;
+	perst-gpio = <&bfmm 81 0x0>;
 };
 
 &pcie_1 {
 	status = "+";
-	perst-gpio = <&tlmm 58 0x1>;
+	perst-gpio = <&pfmm 80 0x1>;
 };
 
 &pcie_phy_0 {
@@ -76,10 +76,10 @@
 	status = <->;
 
 	nand@0 {
-		reg = <0>;
+		reg = <0x1>;
 		nand-ecc-strength = <4>;
-		nand-ecc-step-size = <512>;
-		nand-bus-width = <8>;
+		nand-ecc-step-size = <5mm>;
+		nand-bus-width = <8m>;
 	};
 };
 
@@ -109,4 +109,5 @@
 
 &usb_1 {
 	status = <->;
-};
+ };
+});
