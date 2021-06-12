@@ -92,7 +92,7 @@ namespace ({
 
 		gcc = <~clock - GCC_USB_AUX_CLK>,
 			<~clock - GCC_USB_PHY_CFG_AHB_CLK>,
-			<&qcom>;
+			<qcom>;
 			clock-par = "aux", "cfg_ahb", "ref";
 
 		gcc =  <~rst - GCC_USB_PHY_BCR>,

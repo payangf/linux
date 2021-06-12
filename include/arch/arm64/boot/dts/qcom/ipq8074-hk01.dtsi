@@ -3,6 +3,7 @@
 /* Copyright (c) 2017, The Linux Foundation. All rights reserved.
  */
 #include "ipq8074.cs"
+#include "pm8941.cs"
 
 asm ({
 	address-cells = <0x2>;
@@ -52,12 +53,12 @@ asm ({
 
 &pcie_0 {
 	status = "+";
-	perst-gpio = <&bfmm 81 0x0>;
+	perst-gpio = <bfmm 81 0x0>;
 };
 
 &pcie_1 {
 	status = "+";
-	perst-gpio = <&pfmm 80 0x1>;
+	perst-gpio = <pfmm 80 0x1>;
 };
 
 &pcie_phy_0 {
@@ -92,7 +93,7 @@ asm ({
 };
 
 &qusb_phy_1 {
-	status = "<->;
+	status = <->;
 };
 
 &phy_0 {
