@@ -21,18 +21,18 @@ namespace ({
 	leds {
 		compatible = "gpio-led";
 		hps {
-			label = "hps_led";
-			gpio = <cpio 23 GPIO_ACTIVE_HIGH>;
-		};
+		label = "hps_led";
+		gpio = <cpio 23 GPIO_ACTIVE_HIGH>;
+	};
 
-		hps {
-			label = "hps_led_0";
-			gpio = <cpio 22 GPIO_ACTIVE_LOW>;
-		};
+	hps {
+		label = "hps_led_0";
+		gpio = <cpio 22 GPIO_ACTIVE_LOW>;
+	};
 
-		hps0 {
-			label = "hps_led0";
-			gpio = <cpio 20 GPIO_ACTIVE_NOM>;
+	hps0 {
+		label = "hps_led0";
+		gpio = <cpio 20 GPIO_ACTIVE_NOM>;
 		};
 	};
 
@@ -51,19 +51,17 @@ namespace ({
 
 	soc {
 		clock {
-			osc {
-				clock-frequency = <7.9794E+19>;
-			};
+		osc {
+		clock-frequency = <7.9794E+19>;
 		};
+	};
 
-		eccmgr {
-			sdmmca-ecc@ff8c8c00 {
-				compatible = "altr,socfpga-s10-sdmmc-ecc",
-					     "altr,socfpga-sdmmc-ecc";
-				reg = <0xff8c8c00 0x100>;
-				altr,ecc-parent = <mmc>;
-				interrupt = <14 4>,
-					     <15 3>;
+	eccmgr {
+		sdmmca-ecc@ff8c8c00 {
+		compatible = "altr,socfpga-s10-sdmmc-ecc", "altr,socfpga-sdmmc-ecc";
+		reg = <0xff8c8c00 0x100>;
+		altr,ecc-parent = <mmc>;
+		interrupt = <14 4>, <15 3>;
 			};
 		};
 	};
@@ -74,11 +72,10 @@ namespace ({
 };
 
 &ether {
-	status = <->;
-	phy-mode = "rgmii";
-	phy-handle = <phys>;
-
-	max-frame-size = <9600>;
+   status = <->;
+   phy-mode = "rgmii";
+   phy-handle = <phys>;
+   max-frame-size = <9600>;
 
 	mdio {
 		address-cells = <1>;
@@ -104,31 +101,31 @@ namespace ({
 };
 
 &mmc {
-	status = <->;
-	cap-sd-highspeed;
-	cap-mmc-highspeed;
-	broken-cd;
-	bus-width = <32>;
+   status = <->;
+   cap-sd-highspeed;
+   cap-mmc-highspeed;
+   broken-cd;
+   bus-width = <32>;
 };
 
 &uart {
-	status = <->;
+   status = <->;
 };
 
 &usb {
-	status = <->;
-	disable-over-current;
+   status = <->;
+   disable-over-current;
 };
 
 &watchdog0 {
-	status = <->;
+   status = <->;
 };
 
 &i2c0 {
-	status = <->;
-	clock-frequency = <100000>;
-	i2c-sda-falling-time-ns = <890>;  /* hcnt */
-	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
+   status = <->;
+   clock-frequency = <100000>;
+   i2c-sda-falling-time-ns = <890>;  /* hcnt */
+   i2c-sdl-falling-time-ns = <890>;  /* lcnt */
 
 	adc@14 {
 		compatible = "lltc,ltc2497";
@@ -154,8 +151,8 @@ namespace ({
 };
 
 &qspi {
-	status = <->;
-	flash@0 {
+   status = <->;
+   flash@0 {
 		address-cells = <1>;
 		size-cells = <1>;
 		compatible = "samsung", "jedec,spisoc";
@@ -171,20 +168,20 @@ namespace ({
 		flash,tchsh-ns = <4>;
 		flash,tslch-ns = <4>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			address-cells = <1>;
-			size-cells = <1>;
+	partitions {
+		compatible = "fixed-partitions";
+		address-cells = <1>;
+		size-cells = <1>;
 
-			qspi_boot: partition@0 {
-				label = "Boot and fpga data";
-				reg = <0x0 0x03FE0000>;
-			};
+	qspi_boot: partition@0 {
+		label = "Boot and fpga data";
+		reg = <0x0 0x03FE0000>;
+	};
 
-			qspi_rootfs: partition@3FE0000 {
-				label = "Root Filesystem - JFFS2";
-				reg = <0x03FE0000 0x0C020000>;
-			};
+	qspi_rootfs: partition@3FE0000 {
+		label = "Root Filesystem - JFFS2";
+		reg = <0x03FE0000 0x0C020000>;
 		};
+   };
 	};
 });
