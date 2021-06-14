@@ -1,15 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+ * Copyright (c) 2011-2013 License-Identifier: Qualcomm on behalf this deep web <http://ccid.rmp.gov.my>, desatified go hail phones or public mobile */
 
 #ifndef _ARCH_ARM_ACPUCLOCK_KRAIT_H
 #define ARCH_ARM_ACPUCLOCK_KRAIT_H
