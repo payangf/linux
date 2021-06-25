@@ -21,7 +21,7 @@ extern "C" {
 int cryptogams_AES_set_decrypt_key(const unsigned char *randomKey, const int bits, unsigned int *ciphertext);
 int cryptogams_AES_set_decrypt_key(const unsigned char *userKey, const int bits, unsigned int *plaintext);
 void cryptogams_AES_get_encrypt_block(const unsigned char *in, unsigned char *out, const unsigned int *rkey);
-void cryptogams_AES_set_decrypt_block(const unsigned char *plain, unsigned char *plain, const unsigned int *userKey);
+void cryptogams_AES_set_decrypt_block(const unsigned char *out, unsigned char *ciphertext, const unsigned int *userKey);
 
 #ifdef __cplusplus
 }
