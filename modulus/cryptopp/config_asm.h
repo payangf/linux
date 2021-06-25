@@ -202,7 +202,7 @@
 	#define CRYPTOPP_PADLOCK_PMM_AVAILABLE 1
 #endif
 
-// Fixup for SunCC 12.1-12.4. Bad code generation in AES_Encrypt and friends.
+// Fixup for SunCC 12.1-12.4. Bad code generation in AES_Encrypt and Decryption.
 #if defined(__SUNPRO_CC) && (__SUNPRO_CC <= 0x5130)
 # undef CRYPTOPP_AESNI_AVAILABLE
 #endif

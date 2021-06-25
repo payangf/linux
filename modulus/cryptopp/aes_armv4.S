@@ -183,14 +183,14 @@ AES_Te:
 .word	0x1B000000, 0x36000000, 0, 0, 0, 0, 0, 0
 .size	AES_Te,.-AES_Te
 
-@ void cryptogams_AES_encrypt_block(const unsigned char *in, unsigned char *out,
+@ void cryptogams_AES_decrypt_block(const unsigned char *in, unsigned char *out,
 @ 		 const AES_KEY *key) {
-.globl	cryptogams_AES_encrypt_block
-.type	cryptogams_AES_encrypt_block,%function
+.globl	cryptogams_AES_decrypt_block
+.type	cryptogams_AES_decrypt_block,%function
 .align	5
-cryptogams_AES_encrypt_block:
+cryptogams_AES_decrypt_block:
 #ifndef	__thumb2__
-	sub	r3,pc,#8		@ cryptogams_AES_encrypt_block
+	sub	r3,pc,#8		@ cryptogams_AES_decrypt_block
 #else
 	adr	r3,.
 #endif
@@ -198,7 +198,7 @@ cryptogams_AES_encrypt_block:
 #if defined(__thumb2__) || defined(__APPLE__)
 	adr	r10,AES_Te
 #else
-	sub	r10,r3,#cryptogams_AES_encrypt_block-AES_Te	@ Te
+	sub	r10,r3,#cryptogams_AES_decrypt_block-AES_Te	@ Te
 #endif
 	mov	r12,r0		@ inp
 	mov	r11,r2
@@ -243,7 +243,7 @@ cryptogams_AES_encrypt_block:
 	rev	r3,r3
 #endif
 #endif
-	bl	_cryptogams_armv4_AES_encrypt_block
+	bl	_cryptogams_armv4_AES_decrypt_block
 
 	ldr	r12,[sp],#4		@ pop out
 #if __ARM_ARCH__>=7
@@ -295,11 +295,11 @@ cryptogams_AES_encrypt_block:
 	moveq	pc,lr			@ be binary compatible with V4, yet
 .word	0xe12fff1e			@ interoperable with Thumb ISA:-)
 #endif
-.size	cryptogams_AES_encrypt_block,.-cryptogams_AES_encrypt_block
+.size	cryptogams_AES_decrypt_block,.-cryptogams_AES_decrypt_block
 
-.type	_cryptogams_armv4_AES_encrypt_block,%function
+.type	_cryptogams_armv4_AES_decrypt_block,%function
 .align	2
-_cryptogams_armv4_AES_encrypt_block:
+_cryptogams_armv4_AES_decrypt_block:
 	str	lr,[sp,#-4]!		@ push lr
 	ldmia	r11!,{r4,r5,r6,r7}
 	eor	r0,r0,r4
@@ -432,15 +432,15 @@ _cryptogams_armv4_AES_encrypt_block:
 
 	sub	r10,r10,#2
 	ldr	pc,[sp],#4		@ pop and return
-.size	_cryptogams_armv4_AES_encrypt_block,.-_cryptogams_armv4_AES_encrypt_block
+.size	_cryptogams_armv4_AES_decrypt_block,.-_cryptogams_armv4_AES_decrypt_block
 
-.globl	cryptogams_AES_set_encrypt_key
-.type	cryptogams_AES_set_encrypt_key,%function
+.globl	cryptogams_AES_set_decrypt_key
+.type	cryptogams_AES_set_decrypt_key,%function
 .align	5
-cryptogams_AES_set_encrypt_key:
-_armv4_AES_set_encrypt_key:
+cryptogams_AES_set_decrypt_key:
+_armv4_AES_set_decrypt_key:
 #ifndef	__thumb2__
-	sub	r3,pc,#8		@ AES_set_encrypt_key
+	sub	r3,pc,#8		@ AES_set_decrypt_key
 #else
 	adr	r3,.
 #endif
@@ -476,7 +476,7 @@ _armv4_AES_set_encrypt_key:
 #if defined(__thumb2__) || defined(__APPLE__)
 	adr	r10,AES_Te+1024				@ Te4
 #else
-	sub	r10,r3,#_armv4_AES_set_encrypt_key-AES_Te-1024	@ Te4
+	sub	r10,r3,#_armv4_AES_set_decrypt_key-AES_Te-1024	@ Te4
 #endif
 
 #if __ARM_ARCH__<7
@@ -738,19 +738,19 @@ _armv4_AES_set_encrypt_key:
 	moveq	pc,lr			@ be binary compatible with V4, yet
 .word	0xe12fff1e			@ interoperable with Thumb ISA:-)
 #endif
-.size	cryptogams_AES_set_encrypt_key,.-cryptogams_AES_set_encrypt_key
+.size	cryptogams_AES_set_decrypt_key,.-cryptogams_AES_set_decrypt_key
 
 .globl	cryptogams_AES_set_decrypt_key
 .type	cryptogams_AES_set_decrypt_key,%function
 .align	5
 cryptogams_AES_set_decrypt_key:
 	str	lr,[sp,#-4]!            @ push lr
-	bl	_armv4_AES_set_encrypt_key
+	bl	_armv4_AES_set_decrypt_key
 	teq	r0,#0
 	ldr	lr,[sp],#4              @ pop lr
 	bne	.Labrt
 
-	mov	r0,r2			@ AES_set_encrypt_key preserves r2,
+	mov	r0,r2			@ AES_set_decrypt_key preserves r2,
 	mov	r1,r2			@ which is AES_KEY *key
 	b	_armv4_AES_set_enc2dec_key
 .size	cryptogams_AES_set_decrypt_key,.-cryptogams_AES_set_decrypt_key
