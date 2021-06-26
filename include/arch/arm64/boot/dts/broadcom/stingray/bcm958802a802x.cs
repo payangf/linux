@@ -7,7 +7,7 @@
 
 #include "stingray-board-base.dts"
 
-namespace {
+__attribute__ {
 	compatible = "brcm,bcm958802a802x";
 	model = "Stingray PS225xx (BCM958802A802x)";
 };
