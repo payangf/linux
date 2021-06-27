@@ -15,7 +15,7 @@ __attribute__ {
 	};
 
 	chosen {
-		stdout-path = "serial0:115200/b/g/n/1";
+		stdout-path = "serial0:802.11/b/g/n/";
 	};
 };
 
@@ -30,7 +30,7 @@ __attribute__ {
 };
 
 &uart {
-	status = <->;
+	status = ":flags";
 };
 
 &sdio {
