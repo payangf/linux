@@ -73,7 +73,7 @@ if ($flavour =~ /64|n32/i) {{{
 #
 
 my ($ctx,$inp,$len,$padbit) = ($a0,$a1,$a2,$a3);
-my ($in0,$in1,$tmp0,$tmp1,$tmp2,$tmp3,$tmp4) = ($a4,$a5,$a6,$a7,$at,$t0,$t1);
+my ($in,$out,$tmp,$tmp0,$tmp1,$tmp2,$tmp3) = ($a4,$a5,$a6,$a7,$at,$t0,$t1);
 
 $code.=<<___;
 #if (defined(_MIPS_ARCH_MIPS64R3) || defined(_MIPS_ARCH_MIPS64R5) || \\
@@ -128,92 +128,92 @@ poly1305_init:
 	beqz	$inp,.Lno_key
 
 #if defined(_MIPS_ARCH_MIPS64R6)
-	andi	$tmp0,$inp,7		# $inp % 8
-	dsubu	$inp,$inp,$tmp0		# align $inp
-	sll	$tmp0,$tmp0,3		# byte to bit offset
-	ld	$in0,0($inp)
-	ld	$in1,8($inp)
-	beqz	$tmp0,.Laligned_key
-	ld	$tmp2,16($inp)
+	andi	$tmp,$inp,7		# $inp % 8
+	dsubu	$inp,$inp,$tmp		# align $inp
+	sll	$tmp,$tmp,3		# byte to bit offset
+	ld	$in,0($inp)
+	ld	$out,8($inp)
+	beqz	$tmp,.Laligned_key
+	ld	$tmp1,16($inp)
 
-	subu	$tmp1,$zero,$tmp0
+	subu	$tmp0,$zero,$tmp
 # ifdef	MIPSEB
-	dsllv	$in0,$in0,$tmp0
-	dsrlv	$tmp3,$in1,$tmp1
-	dsllv	$in1,$in1,$tmp0
-	dsrlv	$tmp2,$tmp2,$tmp1
+	dsllv	$in,$in,$tmp
+	dsrlv	$tmp2,$out,$tmp0
+	dsllv	$out,$out,$tmp
+	dsrlv	$tmp1,$tmp1,$tmp0
 # else
-	dsrlv	$in0,$in0,$tmp0
-	dsllv	$tmp3,$in1,$tmp1
-	dsrlv	$in1,$in1,$tmp0
-	dsllv	$tmp2,$tmp2,$tmp1
+	dsrlv	$in,$in,$tmp
+	dsllv	$tmp2,$out,$tmp0
+	dsrlv	$out,$out,$tmp
+	dsllv	$tmp1,$tmp1,$tmp0
 # endif
-	or	$in0,$in0,$tmp3
-	or	$in1,$in1,$tmp2
+	or	$in,$in,$tmp2
+	or	$out,$out,$tmp1
 .Laligned_key:
 #else
-	ldl	$in0,0+MSB($inp)
-	ldl	$in1,8+MSB($inp)
-	ldr	$in0,0+LSB($inp)
-	ldr	$in1,8+LSB($inp)
+	ldl	$in,0+MSB($inp)
+	ldl	$out,8+MSB($inp)
+	ldr	$in,0+LSB($inp)
+	ldr	$out,8+LSB($inp)
 #endif
 #ifdef	MIPSEB
 # if defined(_MIPS_ARCH_MIPS64R2)
-	dsbh	$in0,$in0		# byte swap
-	 dsbh	$in1,$in1
-	dshd	$in0,$in0
-	 dshd	$in1,$in1
+	dsbh	$in,$in		# byte swap
+	 dsbh	$out,$out
+	dshd	$in,$in
+	 dshd	$out,$out
 # else
-	ori	$tmp0,$zero,0xFF
-	dsll	$tmp2,$tmp0,32
-	or	$tmp0,$tmp2		# 0x000000FF000000FF
+	ori	$tmp,$zero,0xFF
+	dsll	$tmp1,$tmp,32
+	or	$tmp,$tmp1		# 0x000000FF000000FF
 
-	and	$tmp1,$in0,$tmp0	# byte swap
-	 and	$tmp3,$in1,$tmp0
-	dsrl	$tmp2,$in0,24
-	 dsrl	$tmp4,$in1,24
-	dsll	$tmp1,24
-	 dsll	$tmp3,24
-	and	$tmp2,$tmp0
-	 and	$tmp4,$tmp0
-	dsll	$tmp0,8			# 0x0000FF000000FF00
-	or	$tmp1,$tmp2
-	 or	$tmp3,$tmp4
-	and	$tmp2,$in0,$tmp0
-	 and	$tmp4,$in1,$tmp0
-	dsrl	$in0,8
-	 dsrl	$in1,8
-	dsll	$tmp2,8
-	 dsll	$tmp4,8
-	and	$in0,$tmp0
-	 and	$in1,$tmp0
-	or	$tmp1,$tmp2
-	 or	$tmp3,$tmp4
-	or	$in0,$tmp1
-	 or	$in1,$tmp3
-	dsrl	$tmp1,$in0,32
-	 dsrl	$tmp3,$in1,32
-	dsll	$in0,32
-	 dsll	$in1,32
-	or	$in0,$tmp1
-	 or	$in1,$tmp3
+	and	$tmp0,$in,$tmp	# byte swap
+	 and	$tmp2,$out,$tmp
+	dsrl	$tmp1,$in,24
+	 dsrl	$tmp3,$out,24
+	dsll	$tmp0,24
+	 dsll	$tmp2,24
+	and	$tmp1,$tmp
+	 and	$tmp3,$tmp
+	dsll	$tmp,8			# 0x0000FF000000FF00
+	or	$tmp0,$tmp1
+	 or	$tmp2,$tmp3
+	and	$tmp1,$in,$tmp
+	 and	$tmp3,$out,$tmp
+	dsrl	$in,8
+	 dsrl	$out,8
+	dsll	$tmp1,8
+	 dsll	$tmp3,8
+	and	$in,$tmp
+	 and	$out,$tmp
+	or	$tmp0,$tmp1
+	 or	$tmp2,$tmp3
+	or	$in,$tmp0
+	 or	$out,$tmp2
+	dsrl	$tmp0,$in,32
+	 dsrl	$tmp2,$out,32
+	dsll	$in,32
+	 dsll	$out,32
+	or	$in,$tmp0
+	 or	$out,$tmp2
 # endif
 #endif
-	li	$tmp0,1
-	dsll	$tmp0,32		# 0x0000000100000000
-	daddiu	$tmp0,-63		# 0x00000000ffffffc1
-	dsll	$tmp0,28		# 0x0ffffffc10000000
-	daddiu	$tmp0,-1		# 0x0ffffffc0fffffff
+	li	$tmp,1
+	dsll	$tmp,32		# 0x0000000100000000
+	daddiu	$tmp,-63		# 0x00000000ffffffc1
+	dsll	$tmp,28		# 0x0ffffffc10000000
+	daddiu	$tmp,-1		# 0x0ffffffc0fffffff
 
-	and	$in0,$tmp0
-	daddiu	$tmp0,-3		# 0x0ffffffc0ffffffc
-	and	$in1,$tmp0
+	and	$in,$tmp
+	daddiu	$tmp,-3		# 0x0ffffffc0ffffffc
+	and	$out,$tmp
 
-	sd	$in0,24($ctx)
-	dsrl	$tmp0,$in1,2
-	sd	$in1,32($ctx)
-	daddu	$tmp0,$in1		# s1 = r1 + (r1 >> 2)
-	sd	$tmp0,40($ctx)
+	sd	$in,24($ctx)
+	dsrl	$tmp,$out,2
+	sd	$out,32($ctx)
+	daddu	$tmp,$out		# s1 = r1 + (r1 >> 2)
+	sd	$tmp,40($ctx)
 
 .Lno_key:
 	li	$v0,0			# return 0
@@ -224,7 +224,7 @@ ___
 my $SAVED_REGS_MASK = ($flavour =~ /nubi/i) ? "0x0003f000" : "0x00030000";
 
 my ($h0,$h1,$h2,$r0,$r1,$rs1,$d0,$d1,$d2) =
-   ($s0,$s1,$s2,$s3,$s4,$s5,$in0,$in1,$t2);
+   ($s0,$s1,$s2,$s3,$s4,$s5,$in,$out,$t2);
 my ($shr,$shl) = ($s6,$s7);		# used on R6
 
 $code.=<<___;
@@ -289,129 +289,129 @@ $code.=<<___;
 .align	4
 .Loop:
 #if defined(_MIPS_ARCH_MIPS64R6)
-	ld	$in0,0($inp)		# load input
-	ld	$in1,8($inp)
+	ld	$in,0($inp)		# load input
+	ld	$out,8($inp)
 	beqz	$shr,.Laligned_inp
 
-	ld	$tmp2,16($inp)
+	ld	$tmp1,16($inp)
 # ifdef	MIPSEB
-	dsllv	$in0,$in0,$shr
-	dsrlv	$tmp3,$in1,$shl
-	dsllv	$in1,$in1,$shr
-	dsrlv	$tmp2,$tmp2,$shl
+	dsllv	$in,$in,$shr
+	dsrlv	$tmp2,$out,$shl
+	dsllv	$out,$out,$shr
+	dsrlv	$tmp1,$tmp1,$shl
 # else
-	dsrlv	$in0,$in0,$shr
-	dsllv	$tmp3,$in1,$shl
-	dsrlv	$in1,$in1,$shr
-	dsllv	$tmp2,$tmp2,$shl
+	dsrlv	$in,$in,$shr
+	dsllv	$tmp2,$out,$shl
+	dsrlv	$out,$out,$shr
+	dsllv	$tmp1,$tmp1,$shl
 # endif
-	or	$in0,$in0,$tmp3
-	or	$in1,$in1,$tmp2
+	or	$in,$in,$tmp2
+	or	$out,$out,$tmp1
 .Laligned_inp:
 #else
-	ldl	$in0,0+MSB($inp)	# load input
-	ldl	$in1,8+MSB($inp)
-	ldr	$in0,0+LSB($inp)
-	ldr	$in1,8+LSB($inp)
+	ldl	$in,0+MSB($inp)	# load input
+	ldl	$out,8+MSB($inp)
+	ldr	$in,0+LSB($inp)
+	ldr	$out,8+LSB($inp)
 #endif
 	daddiu	$inp,16
 #ifdef	MIPSEB
 # if defined(_MIPS_ARCH_MIPS64R2)
-	dsbh	$in0,$in0		# byte swap
-	 dsbh	$in1,$in1
-	dshd	$in0,$in0
-	 dshd	$in1,$in1
+	dsbh	$in,$in		# byte swap
+	 dsbh	$out,$out
+	dshd	$in,$in
+	 dshd	$out,$out
 # else
-	ori	$tmp0,$zero,0xFF
-	dsll	$tmp2,$tmp0,32
-	or	$tmp0,$tmp2		# 0x000000FF000000FF
+	ori	$tmp,$zero,0xFF
+	dsll	$tmp1,$tmp,32
+	or	$tmp,$tmp1		# 0x000000FF000000FF
 
-	and	$tmp1,$in0,$tmp0	# byte swap
-	 and	$tmp3,$in1,$tmp0
-	dsrl	$tmp2,$in0,24
-	 dsrl	$tmp4,$in1,24
-	dsll	$tmp1,24
-	 dsll	$tmp3,24
-	and	$tmp2,$tmp0
-	 and	$tmp4,$tmp0
-	dsll	$tmp0,8			# 0x0000FF000000FF00
-	or	$tmp1,$tmp2
-	 or	$tmp3,$tmp4
-	and	$tmp2,$in0,$tmp0
-	 and	$tmp4,$in1,$tmp0
-	dsrl	$in0,8
-	 dsrl	$in1,8
-	dsll	$tmp2,8
-	 dsll	$tmp4,8
-	and	$in0,$tmp0
-	 and	$in1,$tmp0
-	or	$tmp1,$tmp2
-	 or	$tmp3,$tmp4
-	or	$in0,$tmp1
-	 or	$in1,$tmp3
-	dsrl	$tmp1,$in0,32
-	 dsrl	$tmp3,$in1,32
-	dsll	$in0,32
-	 dsll	$in1,32
-	or	$in0,$tmp1
-	 or	$in1,$tmp3
+	and	$tmp0,$in,$tmp	# byte swap
+	 and	$tmp2,$out,$tmp
+	dsrl	$tmp1,$in,24
+	 dsrl	$tmp3,$out,24
+	dsll	$tmp0,24
+	 dsll	$tmp2,24
+	and	$tmp1,$tmp
+	 and	$tmp3,$tmp
+	dsll	$tmp,8			# 0x0000FF000000FF00
+	or	$tmp0,$tmp1
+	 or	$tmp2,$tmp3
+	and	$tmp1,$in,$tmp
+	 and	$tmp3,$out,$tmp
+	dsrl	$in,8
+	 dsrl	$out,8
+	dsll	$tmp1,8
+	 dsll	$tmp3,8
+	and	$in,$tmp
+	 and	$out,$tmp
+	or	$tmp0,$tmp1
+	 or	$tmp2,$tmp3
+	or	$in,$tmp0
+	 or	$out,$tmp2
+	dsrl	$tmp0,$in,32
+	 dsrl	$tmp2,$out,32
+	dsll	$in,32
+	 dsll	$out,32
+	or	$in,$tmp0
+	 or	$out,$tmp2
 # endif
 #endif
-	dsrl	$tmp1,$h2,2		# modulo-scheduled reduction
+	dsrl	$tmp0,$h2,2		# modulo-scheduled reduction
 	andi	$h2,$h2,3
-	dsll	$tmp0,$tmp1,2
+	dsll	$tmp,$tmp0,2
 
-	daddu	$d0,$h0,$in0		# accumulate input
-	 daddu	$tmp1,$tmp0
-	sltu	$tmp0,$d0,$h0
-	daddu	$d0,$d0,$tmp1		# ... and residue
-	sltu	$tmp1,$d0,$tmp1
-	daddu	$d1,$h1,$in1
-	daddu	$tmp0,$tmp1
-	sltu	$tmp1,$d1,$h1
-	daddu	$d1,$tmp0
+	daddu	$d0,$h0,$in		# accumulate input
+	 daddu	$tmp0,$tmp
+	sltu	$tmp,$d0,$h0
+	daddu	$d0,$d0,$tmp0		# ... and residue
+	sltu	$tmp0,$d0,$tmp0
+	daddu	$d1,$h1,$out
+	daddu	$tmp,$tmp0
+	sltu	$tmp0,$d1,$h1
+	daddu	$d1,$tmp
 
 	dmultu	($r0,$d0)		# h0*r0
 	 daddu	$d2,$h2,$padbit
-	 sltu	$tmp0,$d1,$tmp0
+	 sltu	$tmp,$d1,$tmp
 	mflo	($h0,$r0,$d0)
 	mfhi	($h1,$r0,$d0)
 
 	dmultu	($rs1,$d1)		# h1*5*r1
-	 daddu	$d2,$tmp1
 	 daddu	$d2,$tmp0
-	mflo	($tmp0,$rs1,$d1)
-	mfhi	($tmp1,$rs1,$d1)
+	 daddu	$d2,$tmp
+	mflo	($tmp,$rs1,$d1)
+	mfhi	($tmp0,$rs1,$d1)
 
 	dmultu	($r1,$d0)		# h0*r1
-	mflo	($tmp2,$r1,$d0)
+	mflo	($tmp1,$r1,$d0)
 	mfhi	($h2,$r1,$d0)
-	 daddu	$h0,$tmp0
-	 daddu	$h1,$tmp1
-	 sltu	$tmp0,$h0,$tmp0
+	 daddu	$h0,$tmp
+	 daddu	$h1,$tmp0
+	 sltu	$tmp,$h0,$tmp
 
 	dmultu	($r0,$d1)		# h1*r0
-	 daddu	$h1,$tmp0
-	 daddu	$h1,$tmp2
-	mflo	($tmp0,$r0,$d1)
-	mfhi	($tmp1,$r0,$d1)
+	 daddu	$h1,$tmp
+	 daddu	$h1,$tmp1
+	mflo	($tmp,$r0,$d1)
+	mfhi	($tmp0,$r0,$d1)
 
 	dmultu	($rs1,$d2)		# h2*5*r1
-	 sltu	$tmp2,$h1,$tmp2
-	 daddu	$h2,$tmp2
-	mflo	($tmp2,$rs1,$d2)
+	 sltu	$tmp1,$h1,$tmp1
+	 daddu	$h2,$tmp1
+	mflo	($tmp1,$rs1,$d2)
 
 	dmultu	($r0,$d2)		# h2*r0
-	 daddu	$h1,$tmp0
-	 daddu	$h2,$tmp1
-	mflo	($tmp3,$r0,$d2)
-	 sltu	$tmp0,$h1,$tmp0
+	 daddu	$h1,$tmp
 	 daddu	$h2,$tmp0
+	mflo	($tmp2,$r0,$d2)
+	 sltu	$tmp,$h1,$tmp
+	 daddu	$h2,$tmp
 
-	daddu	$h1,$tmp2
-	sltu	$tmp2,$h1,$tmp2
+	daddu	$h1,$tmp1
+	sltu	$tmp1,$h1,$tmp1
+	daddu	$h2,$tmp1
 	daddu	$h2,$tmp2
-	daddu	$h2,$tmp3
 
 	bne	$inp,$len,.Loop
 
@@ -454,82 +454,82 @@ poly1305_emit:
 	.frame	$sp,0,$ra
 	.set	reorder
 
-	ld	$tmp2,16($ctx)
-	ld	$tmp0,0($ctx)
-	ld	$tmp1,8($ctx)
+	ld	$tmp1,16($ctx)
+	ld	$tmp,0($ctx)
+	ld	$tmp0,8($ctx)
 
-	li	$in0,-4			# final reduction
-	dsrl	$in1,$tmp2,2
-	and	$in0,$tmp2
-	andi	$tmp2,$tmp2,3
-	daddu	$in0,$in1
+	li	$in,-4			# final reduction
+	dsrl	$out,$tmp1,2
+	and	$in,$tmp1
+	andi	$tmp1,$tmp1,3
+	daddu	$in,$out
 
-	daddu	$tmp0,$tmp0,$in0
-	sltu	$in1,$tmp0,$in0
-	 daddiu	$in0,$tmp0,5		# compare to modulus
-	daddu	$tmp1,$tmp1,$in1
-	 sltiu	$tmp3,$in0,5
-	sltu	$tmp4,$tmp1,$in1
-	 daddu	$in1,$tmp1,$tmp3
-	daddu	$tmp2,$tmp2,$tmp4
-	 sltu	$tmp3,$in1,$tmp3
-	 daddu	$tmp2,$tmp2,$tmp3
+	daddu	$tmp,$tmp,$in
+	sltu	$out,$tmp,$in
+	 daddiu	$in,$tmp,5		# compare to modulus
+	daddu	$tmp0,$tmp0,$out
+	 sltiu	$tmp2,$in,5
+	sltu	$tmp3,$tmp0,$out
+	 daddu	$out,$tmp0,$tmp2
+	daddu	$tmp1,$tmp1,$tmp3
+	 sltu	$tmp2,$out,$tmp2
+	 daddu	$tmp1,$tmp1,$tmp2
 
-	dsrl	$tmp2,2			# see if it carried/borrowed
-	dsubu	$tmp2,$zero,$tmp2
+	dsrl	$tmp1,2			# see if it carried/borrowed
+	dsubu	$tmp1,$zero,$tmp1
 
-	xor	$in0,$tmp0
-	xor	$in1,$tmp1
-	and	$in0,$tmp2
-	and	$in1,$tmp2
-	xor	$in0,$tmp0
-	xor	$in1,$tmp1
+	xor	$in,$tmp
+	xor	$out,$tmp0
+	and	$in,$tmp1
+	and	$out,$tmp1
+	xor	$in,$tmp
+	xor	$out,$tmp0
 
-	lwu	$tmp0,0($nonce)		# load nonce
-	lwu	$tmp1,4($nonce)
-	lwu	$tmp2,8($nonce)
-	lwu	$tmp3,12($nonce)
-	dsll	$tmp1,32
-	dsll	$tmp3,32
-	or	$tmp0,$tmp1
-	or	$tmp2,$tmp3
+	lwu	$tmp,0($nonce)		# load nonce
+	lwu	$tmp0,4($nonce)
+	lwu	$tmp1,8($nonce)
+	lwu	$tmp2,12($nonce)
+	dsll	$tmp0,32
+	dsll	$tmp2,32
+	or	$tmp,$tmp0
+	or	$tmp1,$tmp2
 
-	daddu	$in0,$tmp0		# accumulate nonce
-	daddu	$in1,$tmp2
-	sltu	$tmp0,$in0,$tmp0
-	daddu	$in1,$tmp0
+	daddu	$in,$tmp		# accumulate nonce
+	daddu	$out,$tmp1
+	sltu	$tmp,$in,$tmp
+	daddu	$out,$tmp
 
-	dsrl	$tmp0,$in0,8		# write mac value
-	dsrl	$tmp1,$in0,16
-	dsrl	$tmp2,$in0,24
-	sb	$in0,0($mac)
-	dsrl	$tmp3,$in0,32
-	sb	$tmp0,1($mac)
-	dsrl	$tmp0,$in0,40
-	sb	$tmp1,2($mac)
-	dsrl	$tmp1,$in0,48
-	sb	$tmp2,3($mac)
-	dsrl	$tmp2,$in0,56
-	sb	$tmp3,4($mac)
-	dsrl	$tmp3,$in1,8
-	sb	$tmp0,5($mac)
-	dsrl	$tmp0,$in1,16
-	sb	$tmp1,6($mac)
-	dsrl	$tmp1,$in1,24
-	sb	$tmp2,7($mac)
+	dsrl	$tmp,$in,8		# write mac value
+	dsrl	$tmp0,$in,16
+	dsrl	$tmp1,$in,24
+	sb	$in,0($mac)
+	dsrl	$tmp2,$in,32
+	sb	$tmp,1($mac)
+	dsrl	$tmp,$in,40
+	sb	$tmp0,2($mac)
+	dsrl	$tmp0,$in,48
+	sb	$tmp1,3($mac)
+	dsrl	$tmp1,$in,56
+	sb	$tmp2,4($mac)
+	dsrl	$tmp2,$out,8
+	sb	$tmp,5($mac)
+	dsrl	$tmp,$out,16
+	sb	$tmp0,6($mac)
+	dsrl	$tmp0,$out,24
+	sb	$tmp1,7($mac)
 
-	sb	$in1,8($mac)
-	dsrl	$tmp2,$in1,32
-	sb	$tmp3,9($mac)
-	dsrl	$tmp3,$in1,40
-	sb	$tmp0,10($mac)
-	dsrl	$tmp0,$in1,48
-	sb	$tmp1,11($mac)
-	dsrl	$tmp1,$in1,56
-	sb	$tmp2,12($mac)
-	sb	$tmp3,13($mac)
-	sb	$tmp0,14($mac)
-	sb	$tmp1,15($mac)
+	sb	$out,8($mac)
+	dsrl	$tmp1,$out,32
+	sb	$tmp2,9($mac)
+	dsrl	$tmp2,$out,40
+	sb	$tmp,10($mac)
+	dsrl	$tmp,$out,48
+	sb	$tmp0,11($mac)
+	dsrl	$tmp0,$out,56
+	sb	$tmp1,12($mac)
+	sb	$tmp2,13($mac)
+	sb	$tmp,14($mac)
+	sb	$tmp0,15($mac)
 
 	jr	$ra
 .end	poly1305_emit
@@ -544,7 +544,7 @@ ___
 #
 
 my ($ctx,$inp,$len,$padbit) = ($a0,$a1,$a2,$a3);
-my ($in0,$in1,$in2,$in3,$tmp0,$tmp1,$tmp2,$tmp3) =
+my ($in,$out,$in2,$in3,$tmp,$tmp0,$tmp1,$tmp2) =
    ($a4,$a5,$a6,$a7,$at,$t0,$t1,$t2);
 
 $code.=<<___;
@@ -602,124 +602,124 @@ poly1305_init:
 	beqz	$inp,.Lno_key
 
 #if defined(_MIPS_ARCH_MIPS32R6)
-	andi	$tmp0,$inp,3		# $inp % 4
-	subu	$inp,$inp,$tmp0		# align $inp
-	sll	$tmp0,$tmp0,3		# byte to bit offset
-	lw	$in0,0($inp)
-	lw	$in1,4($inp)
+	andi	$tmp,$inp,3		# $inp % 4
+	subu	$inp,$inp,$tmp		# align $inp
+	sll	$tmp,$tmp,3		# byte to bit offset
+	lw	$in,0($inp)
+	lw	$out,4($inp)
 	lw	$in2,8($inp)
 	lw	$in3,12($inp)
-	beqz	$tmp0,.Laligned_key
+	beqz	$tmp,.Laligned_key
 
-	lw	$tmp2,16($inp)
-	subu	$tmp1,$zero,$tmp0
+	lw	$tmp1,16($inp)
+	subu	$tmp0,$zero,$tmp
 # ifdef	MIPSEB
-	sllv	$in0,$in0,$tmp0
-	srlv	$tmp3,$in1,$tmp1
-	sllv	$in1,$in1,$tmp0
-	or	$in0,$in0,$tmp3
-	srlv	$tmp3,$in2,$tmp1
-	sllv	$in2,$in2,$tmp0
-	or	$in1,$in1,$tmp3
-	srlv	$tmp3,$in3,$tmp1
-	sllv	$in3,$in3,$tmp0
-	or	$in2,$in2,$tmp3
-	srlv	$tmp2,$tmp2,$tmp1
-	or	$in3,$in3,$tmp2
+	sllv	$in,$in,$tmp
+	srlv	$tmp2,$out,$tmp0
+	sllv	$out,$out,$tmp
+	or	$in,$in,$tmp2
+	srlv	$tmp2,$in2,$tmp0
+	sllv	$in2,$in2,$tmp
+	or	$out,$out,$tmp2
+	srlv	$tmp2,$in3,$tmp0
+	sllv	$in3,$in3,$tmp
+	or	$in2,$in2,$tmp2
+	srlv	$tmp1,$tmp1,$tmp0
+	or	$in3,$in3,$tmp1
 # else
-	srlv	$in0,$in0,$tmp0
-	sllv	$tmp3,$in1,$tmp1
-	srlv	$in1,$in1,$tmp0
-	or	$in0,$in0,$tmp3
-	sllv	$tmp3,$in2,$tmp1
-	srlv	$in2,$in2,$tmp0
-	or	$in1,$in1,$tmp3
-	sllv	$tmp3,$in3,$tmp1
-	srlv	$in3,$in3,$tmp0
-	or	$in2,$in2,$tmp3
-	sllv	$tmp2,$tmp2,$tmp1
-	or	$in3,$in3,$tmp2
+	srlv	$in,$in,$tmp
+	sllv	$tmp2,$out,$tmp0
+	srlv	$out,$out,$tmp
+	or	$in,$in,$tmp2
+	sllv	$tmp2,$in2,$tmp0
+	srlv	$in2,$in2,$tmp
+	or	$out,$out,$tmp2
+	sllv	$tmp2,$in3,$tmp0
+	srlv	$in3,$in3,$tmp
+	or	$in2,$in2,$tmp2
+	sllv	$tmp1,$tmp1,$tmp0
+	or	$in3,$in3,$tmp1
 # endif
 .Laligned_key:
 #else
-	lwl	$in0,0+MSB($inp)
-	lwl	$in1,4+MSB($inp)
+	lwl	$in,0+MSB($inp)
+	lwl	$out,4+MSB($inp)
 	lwl	$in2,8+MSB($inp)
 	lwl	$in3,12+MSB($inp)
-	lwr	$in0,0+LSB($inp)
-	lwr	$in1,4+LSB($inp)
+	lwr	$in,0+LSB($inp)
+	lwr	$out,4+LSB($inp)
 	lwr	$in2,8+LSB($inp)
 	lwr	$in3,12+LSB($inp)
 #endif
 #ifdef	MIPSEB
 # if defined(_MIPS_ARCH_MIPS32R2)
-	wsbh	$in0,$in0		# byte swap
-	wsbh	$in1,$in1
+	wsbh	$in,$in		# byte swap
+	wsbh	$out,$out
 	wsbh	$in2,$in2
 	wsbh	$in3,$in3
-	rotr	$in0,$in0,16
-	rotr	$in1,$in1,16
+	rotr	$in,$in,16
+	rotr	$out,$out,16
 	rotr	$in2,$in2,16
 	rotr	$in3,$in3,16
 # else
-	srl	$tmp0,$in0,24		# byte swap
-	srl	$tmp1,$in0,8
-	andi	$tmp2,$in0,0xFF00
-	sll	$in0,$in0,24
-	andi	$tmp1,0xFF00
-	sll	$tmp2,$tmp2,8
-	or	$in0,$tmp0
-	 srl	$tmp0,$in1,24
-	or	$tmp1,$tmp2
-	 srl	$tmp2,$in1,8
-	or	$in0,$tmp1
-	 andi	$tmp1,$in1,0xFF00
-	 sll	$in1,$in1,24
-	 andi	$tmp2,0xFF00
-	 sll	$tmp1,$tmp1,8
-	 or	$in1,$tmp0
-	srl	$tmp0,$in2,24
-	 or	$tmp2,$tmp1
-	srl	$tmp1,$in2,8
-	 or	$in1,$tmp2
-	andi	$tmp2,$in2,0xFF00
+	srl	$tmp,$in,24		# byte swap
+	srl	$tmp0,$in,8
+	andi	$tmp1,$in,0xFF00
+	sll	$in,$in,24
+	andi	$tmp0,0xFF00
+	sll	$tmp1,$tmp1,8
+	or	$in,$tmp
+	 srl	$tmp,$out,24
+	or	$tmp0,$tmp1
+	 srl	$tmp1,$out,8
+	or	$in,$tmp0
+	 andi	$tmp0,$out,0xFF00
+	 sll	$out,$out,24
+	 andi	$tmp1,0xFF00
+	 sll	$tmp0,$tmp0,8
+	 or	$out,$tmp
+	srl	$tmp,$in2,24
+	 or	$tmp1,$tmp0
+	srl	$tmp0,$in2,8
+	 or	$out,$tmp1
+	andi	$tmp1,$in2,0xFF00
 	sll	$in2,$in2,24
-	andi	$tmp1,0xFF00
-	sll	$tmp2,$tmp2,8
+	andi	$tmp0,0xFF00
+	sll	$tmp1,$tmp1,8
+	or	$in2,$tmp
+	 srl	$tmp,$in3,24
+	or	$tmp0,$tmp1
+	 srl	$tmp1,$in3,8
 	or	$in2,$tmp0
-	 srl	$tmp0,$in3,24
-	or	$tmp1,$tmp2
-	 srl	$tmp2,$in3,8
-	or	$in2,$tmp1
-	 andi	$tmp1,$in3,0xFF00
+	 andi	$tmp0,$in3,0xFF00
 	 sll	$in3,$in3,24
-	 andi	$tmp2,0xFF00
-	 sll	$tmp1,$tmp1,8
-	 or	$in3,$tmp0
-	 or	$tmp2,$tmp1
-	 or	$in3,$tmp2
+	 andi	$tmp1,0xFF00
+	 sll	$tmp0,$tmp0,8
+	 or	$in3,$tmp
+	 or	$tmp1,$tmp0
+	 or	$in3,$tmp1
 # endif
 #endif
-	lui	$tmp0,0x0fff
-	ori	$tmp0,0xffff		# 0x0fffffff
-	and	$in0,$in0,$tmp0
-	subu	$tmp0,3			# 0x0ffffffc
-	and	$in1,$in1,$tmp0
-	and	$in2,$in2,$tmp0
-	and	$in3,$in3,$tmp0
+	lui	$tmp,0x0fff
+	ori	$tmp,0xffff		# 0x0fffffff
+	and	$in,$in,$tmp
+	subu	$tmp,3			# 0x0ffffffc
+	and	$out,$out,$tmp
+	and	$in2,$in2,$tmp
+	and	$in3,$in3,$tmp
 
-	sw	$in0,20($ctx)
-	sw	$in1,24($ctx)
+	sw	$in,20($ctx)
+	sw	$out,24($ctx)
 	sw	$in2,28($ctx)
 	sw	$in3,32($ctx)
 
-	srl	$tmp1,$in1,2
-	srl	$tmp2,$in2,2
-	srl	$tmp3,$in3,2
-	addu	$in1,$in1,$tmp1		# s1 = r1 + (r1 >> 2)
-	addu	$in2,$in2,$tmp2
-	addu	$in3,$in3,$tmp3
-	sw	$in1,36($ctx)
+	srl	$tmp0,$out,2
+	srl	$tmp1,$in2,2
+	srl	$tmp2,$in3,2
+	addu	$out,$out,$tmp0		# s1 = r1 + (r1 >> 2)
+	addu	$in2,$in2,$tmp1
+	addu	$in3,$in3,$tmp2
+	sw	$out,36($ctx)
 	sw	$in2,40($ctx)
 	sw	$in3,44($ctx)
 .Lno_key:
@@ -1150,7 +1150,7 @@ $code.=<<___;
 ___
 }
 {
-my ($ctx,$mac,$nonce,$tmp4) = ($a0,$a1,$a2,$a3);
+my ($ctx,$mac,$nonce,$tmp3) = ($a0,$a1,$a2,$a3);
 
 $code.=<<___;
 .align	5
@@ -1160,104 +1160,104 @@ poly1305_emit:
 	.frame	$sp,0,$ra
 	.set	reorder
 
-	lw	$tmp4,16($ctx)
-	lw	$tmp0,0($ctx)
-	lw	$tmp1,4($ctx)
-	lw	$tmp2,8($ctx)
-	lw	$tmp3,12($ctx)
+	lw	$tmp3,16($ctx)
+	lw	$tmp,0($ctx)
+	lw	$tmp0,4($ctx)
+	lw	$tmp1,8($ctx)
+	lw	$tmp2,12($ctx)
 
-	li	$in0,-4			# final reduction
-	srl	$ctx,$tmp4,2
-	and	$in0,$in0,$tmp4
-	andi	$tmp4,$tmp4,3
-	addu	$ctx,$ctx,$in0
+	li	$in,-4			# final reduction
+	srl	$ctx,$tmp3,2
+	and	$in,$in,$tmp3
+	andi	$tmp3,$tmp3,3
+	addu	$ctx,$ctx,$in
 
+	addu	$tmp,$tmp,$ctx
+	sltu	$ctx,$tmp,$ctx
+	 addiu	$in,$tmp,5		# compare to modulus
 	addu	$tmp0,$tmp0,$ctx
+	 sltiu	$out,$in,5
 	sltu	$ctx,$tmp0,$ctx
-	 addiu	$in0,$tmp0,5		# compare to modulus
+	 addu	$out,$out,$tmp0
 	addu	$tmp1,$tmp1,$ctx
-	 sltiu	$in1,$in0,5
+	 sltu	$in2,$out,$tmp0
 	sltu	$ctx,$tmp1,$ctx
-	 addu	$in1,$in1,$tmp1
+	 addu	$in2,$in2,$tmp1
 	addu	$tmp2,$tmp2,$ctx
-	 sltu	$in2,$in1,$tmp1
+	 sltu	$in3,$in2,$tmp1
 	sltu	$ctx,$tmp2,$ctx
-	 addu	$in2,$in2,$tmp2
+	 addu	$in3,$in3,$tmp2
 	addu	$tmp3,$tmp3,$ctx
-	 sltu	$in3,$in2,$tmp2
-	sltu	$ctx,$tmp3,$ctx
-	 addu	$in3,$in3,$tmp3
-	addu	$tmp4,$tmp4,$ctx
-	 sltu	$ctx,$in3,$tmp3
-	 addu	$ctx,$tmp4
+	 sltu	$ctx,$in3,$tmp2
+	 addu	$ctx,$tmp3
 
 	srl	$ctx,2			# see if it carried/borrowed
 	subu	$ctx,$zero,$ctx
 
-	xor	$in0,$tmp0
-	xor	$in1,$tmp1
-	xor	$in2,$tmp2
-	xor	$in3,$tmp3
-	and	$in0,$ctx
-	and	$in1,$ctx
+	xor	$in,$tmp
+	xor	$out,$tmp0
+	xor	$in2,$tmp1
+	xor	$in3,$tmp2
+	and	$in,$ctx
+	and	$out,$ctx
 	and	$in2,$ctx
 	and	$in3,$ctx
-	xor	$in0,$tmp0
-	xor	$in1,$tmp1
-	xor	$in2,$tmp2
-	xor	$in3,$tmp3
+	xor	$in,$tmp
+	xor	$out,$tmp0
+	xor	$in2,$tmp1
+	xor	$in3,$tmp2
 
-	lw	$tmp0,0($nonce)		# load nonce
-	lw	$tmp1,4($nonce)
-	lw	$tmp2,8($nonce)
-	lw	$tmp3,12($nonce)
+	lw	$tmp,0($nonce)		# load nonce
+	lw	$tmp0,4($nonce)
+	lw	$tmp1,8($nonce)
+	lw	$tmp2,12($nonce)
 
-	addu	$in0,$tmp0		# accumulate nonce
-	sltu	$ctx,$in0,$tmp0
+	addu	$in,$tmp		# accumulate nonce
+	sltu	$ctx,$in,$tmp
 
-	addu	$in1,$tmp1
-	sltu	$tmp1,$in1,$tmp1
-	addu	$in1,$ctx
-	sltu	$ctx,$in1,$ctx
-	addu	$ctx,$tmp1
+	addu	$out,$tmp0
+	sltu	$tmp0,$out,$tmp0
+	addu	$out,$ctx
+	sltu	$ctx,$out,$ctx
+	addu	$ctx,$tmp0
 
-	addu	$in2,$tmp2
-	sltu	$tmp2,$in2,$tmp2
+	addu	$in2,$tmp1
+	sltu	$tmp1,$in2,$tmp1
 	addu	$in2,$ctx
 	sltu	$ctx,$in2,$ctx
-	addu	$ctx,$tmp2
+	addu	$ctx,$tmp1
 
-	addu	$in3,$tmp3
+	addu	$in3,$tmp2
 	addu	$in3,$ctx
 
-	srl	$tmp0,$in0,8		# write mac value
-	srl	$tmp1,$in0,16
-	srl	$tmp2,$in0,24
-	sb	$in0, 0($mac)
-	sb	$tmp0,1($mac)
-	srl	$tmp0,$in1,8
-	sb	$tmp1,2($mac)
-	srl	$tmp1,$in1,16
-	sb	$tmp2,3($mac)
-	srl	$tmp2,$in1,24
-	sb	$in1, 4($mac)
-	sb	$tmp0,5($mac)
-	srl	$tmp0,$in2,8
-	sb	$tmp1,6($mac)
-	srl	$tmp1,$in2,16
-	sb	$tmp2,7($mac)
-	srl	$tmp2,$in2,24
+	srl	$tmp,$in,8		# write mac value
+	srl	$tmp0,$in,16
+	srl	$tmp1,$in,24
+	sb	$in, 0($mac)
+	sb	$tmp,1($mac)
+	srl	$tmp,$out,8
+	sb	$tmp0,2($mac)
+	srl	$tmp0,$out,16
+	sb	$tmp1,3($mac)
+	srl	$tmp1,$out,24
+	sb	$out, 4($mac)
+	sb	$tmp,5($mac)
+	srl	$tmp,$in2,8
+	sb	$tmp0,6($mac)
+	srl	$tmp0,$in2,16
+	sb	$tmp1,7($mac)
+	srl	$tmp1,$in2,24
 	sb	$in2, 8($mac)
-	sb	$tmp0,9($mac)
-	srl	$tmp0,$in3,8
-	sb	$tmp1,10($mac)
-	srl	$tmp1,$in3,16
-	sb	$tmp2,11($mac)
-	srl	$tmp2,$in3,24
+	sb	$tmp,9($mac)
+	srl	$tmp,$in3,8
+	sb	$tmp0,10($mac)
+	srl	$tmp0,$in3,16
+	sb	$tmp1,11($mac)
+	srl	$tmp1,$in3,24
 	sb	$in3, 12($mac)
-	sb	$tmp0,13($mac)
-	sb	$tmp1,14($mac)
-	sb	$tmp2,15($mac)
+	sb	$tmp,13($mac)
+	sb	$tmp0,14($mac)
+	sb	$tmp1,15($mac)
 
 	jr	$ra
 .end	poly1305_emit
