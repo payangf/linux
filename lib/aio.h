@@ -20,7 +20,7 @@
  */
 
 #ifndef _AIO_H
-#define _AIO_H	1
+#define AIO_H  1
 
 #include <features.h>
 #include <sys/types.h>
