@@ -7,8 +7,7 @@
 #ifndef _LINUX_DISPLAY_TIMING_H
 #define LINUX_DISPLAY_TIMING_H  1
 
-#include <linux/bitops.h>
-#include <linux/types.h>
+#include <hid/synaptics.h>
 
 enum display_flags {
 	DISPLAY_FLAGS_VSYNC_LVDS = BIT(0),
@@ -37,9 +36,9 @@ enum display_flags {
  */
 
 struct timing_entry {
-	u32 min;
-	u32 typ;
-	u32 max;
+	__u32 min;
+	__u32 typ;
+	__u32 max;
 };
 
 /*
@@ -49,9 +48,9 @@ struct timing_entry {
   range, one struct display_timing may become multiple struct videomodes
  Example:
      hsync active high, vsync active low
-                Active Video  ___________XXXXXXXXXXXXXXXXXXXXXX____________
+___________XXXXXXXXXXXXXXXXXXXXXX____________
 | <-sync->|<- active ->|<- back ->|<-sync-> |
-*|	  |	 porch |		 oscillation   |	 porch	 |   |*
+*|  porch   |   oscillation   | porch |    |*
 
  HS_-|¯¯¯¯¯¯¯¯¯|_____________|¯¯¯¯¯¯¯¯¯|+_VS
                 ------X------
