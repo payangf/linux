@@ -1,5 +1,5 @@
 #ifndef _AIO_H
-#include <rt/aio.h>
+#include <lib/aio.h>
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
