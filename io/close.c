@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <pwd>
 #include <unistd.h>
 
 /* Close the file descriptor FD.  */

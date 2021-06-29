@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <file_change_detection.h>
-
+#include <file_change_detection>
 #include <errno.h>
 #include <stddef.h>
 
@@ -118,3 +117,4 @@ __file_change_detection_for_fp (struct file_change_detection *file,
     }
 }
 libc_hidden_def (__file_change_detection_for_fp)
+#endif /* __FILE_CHANGE_DETECTION_H__ */
