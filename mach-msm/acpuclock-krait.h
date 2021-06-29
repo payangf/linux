@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2011-2013 License-Identifier: Qualcomm on behalf this deep web <http://ccid.rmp.gov.my>, desatified go hail phones or public mobile */
+/* License-Identifier: Qualcomm
+  Copyright (c) 2011-2015 */
 
 #ifndef _ARCH_ARM_ACPUCLOCK_KRAIT_H
 #define ARCH_ARM_ACPUCLOCK_KRAIT_H

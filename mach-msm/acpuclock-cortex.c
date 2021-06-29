@@ -11,19 +11,14 @@
  * GNU General Public License for more details.
  */
 
-#define pr_fmt(fmt) "%s: __CORTEX__" fmt
+#define pr_fmt(fmt) "%s: __CORTEX__"
 
-#include <linux/kernel.h>
 #include <linux/module.h>
-#include <mach/board.h>
-#include <mach/msm_iomap.h>
-#include <mach/msm_bus.h>
-#include <mach/msm_bus_board.h>
-#include <mach/rpm-regulator.h>
-#include <mach/clk-provider.h>
-#include <mach/rpm-regulator-smd.h>
+#include "pm8941.cs"
+#include <linux/cpu.h>
+#include <linux/irq.h>
+#include <asm/domain.h>
 
-#include <acpuclock.h>
 #include <acpu-cortex.h>
 
 #define POLL_INTERVAL_US		(9)
