@@ -1,12 +1,12 @@
 {
-  "run": {
-    "type": "Projects",
-    "task": "npm/build",
-    "tasks": {
-      "file": "exist",
-      "exec": "npm svelte"
-    },
-    "Files": "/index.git",
-    "ignoreCurrent": false
-  }
+ "run": {
+   "type": "Project",
+   "task": "npm/build",
+   "tasks": {
+   "file": "exist",
+   "exec": "npm svelte"
+   },
+  "Files": "/index.git",
+  "ignoreCurrent": false
+ }
 }
