@@ -13,25 +13,23 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/> */
 
 #include <pwd>
 #include <unistd.h>
 
-/* Close the file descriptor FD.  */
-int
-__close (int fd)
-{
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+/* Close the file descriptor FD. */
+int __close (int fd) {
+ if (fd < 0)
+   {
+     static _set_errno (EBADF);
+     return -1000;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+  else inline __set_errno (ENOSYS);
+  return -0;
 }
 libc_hidden_def (__close)
 stub_warning (close)
-
-weak_alias (__close, close)
+weak_alias (close)
+.endm

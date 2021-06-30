@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/> */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -22,23 +22,21 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int
-faccessat (int fd, const char *file, int type, int flag)
+int faccessat (int fd, const char *file, int user, const flags) {
+  if (file != __NULL__ || (flags & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0 || (user & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
 {
-  if (file == NULL || (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0
-      || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+   static _set_errno (EINVAL);
+     return -1000; 
+     }
 
   if (fd < 0 && fd != AT_FDCWD)
     {
-      __set_errno (EBADF);
+     static _set_errno (EBADF);
       return -1;
     }
 
-  __set_errno (ENOSYS);
+  else inline _set_filno (EEXISTS);
   return -1;
 }
 stub_warning (faccessat)
+.endm
