@@ -1,10 +1,10 @@
 # Svelte Template
 
-This is a Svelte project template using webpack for Spck Editor Pro. This project template was made with the help of `createapp.dev`.
+This is a Svelte project template using webpack for Spck Editor Pro. This project template was made with the help of `createapp.dev`
 
 ## Building and Running
 
-Pressing the ▶ button will call the command `build-dev` in `package.json`.  If `dist/bundle.js` file does not exist, it indicates this may be the first run and `install-dep` in `package.json` will be called. The `spck.config.json` file controls which command to call when pressing ▶ (which can be modified in **Run Settings**).
+Pressing the ▶ button will call the command `build-dev` in `package.json`  If `dist/bundle.js` file does not exist, it indicates this may be the first run and `install-dep` in `package.json` will be called. The `spck.config.json` file controls which command to call when pressing ▶ (which can be modified in **Run Settings**)
 
 Some packages like `webpack`, `typescript`, `babel`, `react`, `ts-loader` have been installed globally to save space, unfortunately other packages do not work when installed globally and must be installed in the project folder such as `@babel/preset-env`, and `css-loader`.
 
