@@ -4,7 +4,7 @@
  */
 #include <socfpga_agilex.dtsi>
 
-namespace ({
+__attribute__ ({
 	model = "SoCFPGA Agilex SoCDK";
 
 	aliases {

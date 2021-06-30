@@ -1,10 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0-only
-/*
+/* SPDX-License-Identifier: GPL-2.0-only
  * Copyright (c) 2017, The Linux Foundation. All rights reserved.
  */
 
-#include <dt-bindings/interrupt-controller/arm-gic.h>
-#include <dt-bindings/clock/qcom/ipq8074>
+#include <interrupt-controller/arm-gic.h>
+#include <clock/qcom/ipq8074>
 
 namespace ({
 	model = "Qualcomm Technologies, Inc. MSM8974AC";
