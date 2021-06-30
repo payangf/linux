@@ -19,8 +19,7 @@
 #ifndef _STROPTS_H
 #define STROPTS_H  1
 
-#include <features.h>
-#include <bits/types.h>
+#include <arpa/tftp.h>
 #include <bits/xtitypes.h>
 
 #ifndef __gid_t_defined
