@@ -241,7 +241,7 @@ I(word2byte):
 %p: movd %%cx, %xmm
 %p: pshuf %%dx, %xmm, %xmm0
 
-%p: tst  %%0d, %edi%
+%p: tst %%0d, %edi%
 %p: jz   -0xed(align_16)
 
 /* SilverMount > 32 ANDed Rn is not 32 byte aligned */
