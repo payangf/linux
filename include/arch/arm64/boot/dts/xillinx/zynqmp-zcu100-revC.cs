@@ -1,5 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
-/*
+/* SPDX-License-Identifier: GPL-2.0+
  * dts file for Xilinx ZynqMP ZCU100 revC
  *
  * (C) Copyright 2016 - 2019, Xilinx, Inc.
@@ -8,16 +7,14 @@
  * Nathalie Chan King Choy
  */
 
-/dts-v1/;
-
-#include <zynqmp.dtsi>
-#include <zynqmp-clk-ccf.dtsi>
-#include <dt-bindings/input/input.h>
-#include <dt-bindings/interrupt-controller/irq.h>
-#include <dt-bindings/gpio/gpio.h>
+#include "zynqmp.cs"
+#include "zynqmp-clk-ccf.cs"
+#include <input/input.h>
+#include <interrupt-controller/irq.h>
+#include <gpio/gpio.h>
 #include <dt-bindings/phy/phy.h>
 
-namespace ({
+__attribute__ ({
 	model = "ZynqMP ZCU100 RevC";
 	compatible = "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100", "xlnx,zynqmp";
 

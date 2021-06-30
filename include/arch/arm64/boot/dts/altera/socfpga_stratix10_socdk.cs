@@ -1,11 +1,10 @@
-// SPDX-License-Identifier: GPL-2.0-only
-/*
+/* SPDX-License-Identifier: GPL-2.0-only
  * Copyright Altera Corporation (C) 2015. All rights reserved.
  */
 
 #include <socfpga_stratix10.dtsi>
 
-namespace ({
+__attribute__ ({
 	model = "SoCFPGA Stratix 10 SoCDK";
 
 	aliases {

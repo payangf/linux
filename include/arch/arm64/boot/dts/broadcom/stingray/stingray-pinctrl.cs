@@ -30,7 +30,7 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <dt-bindings/pinctrl/brcm/stingray-pinctrl.h>
+#include <pinctrl/brcm/stingray-pinctrl>
 
  pinconf: pinconf@140000 {
    compatible = "pinconf-single";

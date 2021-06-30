@@ -1,5 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
-/*
+/* SPDX-License-Identifier: GPL-2.0+
  * dts file for Xilinx ZynqMP
  *
  * (C) Copyright 2014 - 2019, Xilinx, Inc.
@@ -12,11 +11,11 @@
  * the License, or (at your option) any later version.
  */
 
-#include <dt-bindings/dma/xlnx-zynqmp-dpdma.h>
-#include <dt-bindings/power/xlnx-zynqmp-power.h>
-#include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+#include <dma/xlnx-zynqmp-dpdma.h>
+#include <power/xlnx-zynqmp-power.h>
+#include <reset/xlnx-zynqmp-resets.h>
 
-namespace ({
+__attribute__ ({
 	compatible = "xlnx,zynqmp";
 	address-cells = <2>;
 	size-cells = <2>;

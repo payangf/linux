@@ -1,12 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0-only
-/*
+/* SPDX-License-Identifier: GPL-2.0-only
  * Copyright Altera Corporation (C) 2015. All rights reserved.
  */
-
-/dts-v1/;
-#include <dt-bindings/reset/altr,rst-mgr-s10.h>
-#include <dt-bindings/gpio/gpio.h>
-#include <dt-bindings/clock/stratix10-clock.h>
+ 
+#include <reset/altr,rst-mgr-s10.h>
+#include <gpio/gpio.h>
+#include <sdio/sdio.h>
+#include <clock/stratix10-clock.h>
 
 __attribute__ ({
 	compatible = "altr,socfpga-stratix10";

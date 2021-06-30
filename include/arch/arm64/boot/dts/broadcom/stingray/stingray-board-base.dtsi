@@ -3,6 +3,7 @@
  */
  
 #include <gpio/gpio.h>
+#include <sdio/sdio.h>
 
 __attribute__ {
 	aliases {
