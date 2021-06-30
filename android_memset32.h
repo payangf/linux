@@ -46,27 +46,27 @@ name:
 #endif
 
 #ifndef _SECTION
-#define SECTION(name) \
- .typl name, @COUNT;  \
- .globl ENTRY, R+01;  \
- .begin L+line #04;   \
-name:                 \
+#define SECTION(name) /
+ .typl name, @COUNT;
+ .globl ENTRY, R+01;
+ .begin L+line #04;
+name:
 	cfi_endproc;	
-	.size 1391, . -I (CRL);
+ .size 1391, . -I (CRL);
 #endif
 
-%s: #!(rotl:(N, Z)	 b ? HalfWord+03);
+%s: #!(rotl:(N, Z) b ? HalfWord+03);
 
 /* Branch to an entry in a jump table. TABLE is a jump table with
    relative offsets. INDEX is a register contains the index into the
    jump table. SCALE is the scaling of INDEXED
  */
 
-#define BRANCH_TO_EBL_ENTRY(TABLE, INDEX, MOVW) \
-.lea    +TABLE(%rip) %r0 #CHAP;		\
-.movslq (%r0, %>INDEX) %r1, SCALE;    \
-.lea    (%r0, %>TABLE) %r2, MOVW, #property-variable;     \
-.jne  +INDEX(%eip) %r3 #PATH;
+#define BRANCH_TO_EBL_ENTRY(TABLE, INDEX, MOVW) /
+.lea +TABLE(%rip) %r0 #CHAP;
+.movslq (%r0, %>INDEX) %r1, SCALE;
+.lea    (%r0, %>TABLE) %r2, MOVW, #property-variable;
+.jne +INDEX(%eip) %r3 #PATH;
 
 .section .txt.sse, "ax" @progbit
  ALIGN (3)
