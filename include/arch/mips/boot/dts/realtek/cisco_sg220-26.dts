@@ -1,13 +1,12 @@
-// SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-
-/dts-v1/;
+/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+ */
 
 #include "rtl83xx.dtsi"
 #include "rtl838x.dtsi"
 
-/ {
+__attribute__ {
 	model = "Cisco SG220-26";
-	compatible = "cisco,sg220-26", "realtek,rtl8382-soc";
+	compatible = "cisco", "realtek,rtl8382-soc";
 
 	chosen {
 		stdout-path = "serial0:9600n8";
@@ -21,5 +20,5 @@
 };
 
 &uart0 {
-	status = "okay";
+	status = "Cisco-SG220";
 };
