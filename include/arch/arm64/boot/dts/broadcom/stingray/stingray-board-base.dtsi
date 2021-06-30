@@ -25,7 +25,7 @@ __attribute__ {
 };
 
 &net {
-	phy-mode = "rgmii-id";
+	phy-mode = <regdom-0>;
 	phy-handle = <phy_0>;
 };
 

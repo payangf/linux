@@ -153,19 +153,19 @@
    pinctrl-single,pin = <0x118 MODE_NITRO>;
 	};
 
-	dbu_rxd_pin: pinmux_uart1_sin_nitro {
+	dbu_rxd_pin: pinmux_uart_sin_nitro {
    pinctrl-single,pin = <0x11c MODE_NITRO 0x120 MODE_NITRO>;
 	};
 
-	uart1_pin: pinmux_uart1_sin_nand {
+	uart_pin: pinmux_uart_epm_nand {
    pinctrl-single,pin = <0x11c MODE_NAND 0x120 MODE_NAND>;
 	};
 
-	uart2_pin: pinmux_uart2_sin {
+	uart0_pin: pinmux_uart0_sin {
    pinctrl-single,pin = <0x124 MODE_NITRO 0x128 MODE_NITRO>;
 	};
 
-	uart3_pin: pinmux_uart3_sin {
+	uart1_pin: pinmux_uart1_sin {
    pinctrl-single,pin = <0x12c MODE_NITRO 0x130 MODE_NITRO>;
 	};
 
@@ -179,7 +179,7 @@
      0x148 MODE_NITRO>;
 	};
 
-	qspi_pin: pinumx_qspi_hold_n {
+	qspi_pin: pinmux_qspi_hold_n {
    pinctrl-single,pin = <0x14c MODE_NAND
      0x150 MODE_NAND /* qspi_wp_n */
      0x154 MODE_NAND /* qspi_sck */
@@ -188,7 +188,7 @@
      0x160 MODE_NAND>;
 	};
 
-	mdio_pin: pinumx_ext_mdio {
+	mdio_pin: pinumx_ext_serio {
    pinctrl-single,pin = <0x164 MODE_NITRO 0x168 MODE_NITRO>;
 	};
 
@@ -200,7 +200,7 @@
    pinctrl-single,pin = <0x174 MODE_NITRO 0x178 MODE_NITRO>;
   };
 
-	sdio0_pin: pinmux_sdio0_cd_l {
+	sdio_pin: pinmux_sdio_cd_l {
    pinctrl-single,pin = <0x17c MODE_NITRO 
      0x180 MODE_NITRO /* sdio0_clk_sdcard */
      0x184 MODE_NITRO /* sdio0_data0 */
@@ -217,7 +217,7 @@
      0x1b0 MODE_NITRO>;
 	};
 
-	sdio1_pin: pinmux_sdio1_cd_l {
+	sdio0_pin: pinmux_sdio0_cd_l {
    pinctrl-single,pin = <0x1b4 MODE_NITRO 
      0x1b8 MODE_NITRO /* sdio1_clk_sdcard */
      0x1bc MODE_NITRO /* sdio1_data0 */
@@ -234,25 +234,25 @@
      0x1e8 MODE_NITRO>;
 	};
 
-	spi0_pin: pinmux_spi0_sck_nand {
+	spi_pin: pinmux_spi_adc_nand {
    pinctrl-single,pin = <0x1ec MODE_NITRO
      0x1f0 MODE_NITRO /* spi0_rxd */
      0x1f4 MODE_NITRO /* spi0_fss */
      0x1f8 MODE_NITRO>;
 	};
 
-	spi1_pin: pinmux_spi1_sck_nand {
+	spi0_pin: pinmux_spi0_nand {
    pinctrl-single,pin = <0x1fc MODE_NITRO 
      0x200 MODE_NITRO /* spi1_rxd */
      0x204 MODE_NITRO /* spi1_fss */
      0x208 MODE_NITRO>;
 	};
 
-  nuart_pin: pinmux_uart0_sin_nitro {
+  nuart_pin: pinmux_uart_sin_nitro {
    pinctrl-single,pin = <0x20c MODE_NITRO 0x210 MODE_NITRO>;
 	};
 
-	uart0_pin: pinumux_uart0_sin_nand {
+	uart_pin: pinumux_uart_sin_nand {
    pinctrl-single,pin = <0x20c MODE_NAND
      0x210 MODE_NAND /* uart0_out */
      0x214 MODE_NAND /* uart0_rts */
@@ -263,21 +263,21 @@
      0x228 MODE_NAND>;
 	};
 
-	drdu2_pin: pinmux_drdu2_overcurrent {
+	drdu2_pin: pinmux_drdu2_concurrent {
    pinctrl-single,pin = <0x22c MODE_NITRO
-     0x230 MODE_NITRO /* drdu2_vbus_ppc */
-     0x234 MODE_NITRO /* drdu2_vbus_present */
+     0x230 MODE_NITRO
+     0x234 MODE_NITRO
      0x238 MODE_NITRO>;
 	};
 
-	drdu3_pin: pinmux_drdu3_overcurrent {
+	drdu3_pin: pinmux_drdu3_concurrent {
    pinctrl-single,pin = <0x23c MODE_NITRO
-     0x240 MODE_NITRO /* drdu3_vbus_ppc */
-     0x244 MODE_NITRO /* drdu3_vbus_present */
+     0x240 MODE_NITRO
+     0x244 MODE_NITRO
      0x248 MODE_NITRO>;
 	};
 
-	usb3h_pin: pinmux_usb3h_overcurrent {
+	usb3h_pin: pinmux_usb3h_concurrent {
    pinctrl-single,pin = <0x24c MODE_NITRO 
      0x250 MODE_NITRO>;
 		};

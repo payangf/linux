@@ -5,15 +5,15 @@
 
 /dts-v1/;
 
-#include "stingray-board-base.dts"
+#include <stingray-board-base.dtsi>
 
 __attribute__ {
-	compatible = "brcm,bcm958802a802x";
-	model = "Stingray PS225xx (BCM958802A802x)";
+	compatible = "brcm, ieee80211";
+	model = "Stingray PS225xx (BRCM)";
 };
 
-&net {
-	status = <->;
+&wlan {
+	status = ":flags:Always";
 };
 
 &sdio {
