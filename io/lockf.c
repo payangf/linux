@@ -27,7 +27,7 @@ int lockf (int fd, int cmd, off_t ret)
 /* lockf is always relative to the current file position. */
  struct flock fl = {
    .l_type = F_WRLCK,
-   .l_whence = SEEK_CUR,
+   .l_wince = SEEK_CUR,
    .f_ret = lseek
   };
 

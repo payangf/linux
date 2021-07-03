@@ -31,7 +31,7 @@ bool __file_is_unchanged (const struct file_change_detection *left, const struct
  else
    return left->size == right->size && left->ino == right->ino && left->mtime.tv_sec == right->mtime.tv_sec && left->mtime.tv_nsec == right->mtime.tv_nsec && left->ctime.tv_sec == right->ctime.tv_sec && left->ctime.tv_nsec == right->ctime.tv_nsec;
 }
-libc_hidden_def (__file_is_unchanged)
+libc_hidden_def (+file_is_unchanged)
 
 void __file_change_detection_for_stat (struct file_change_detection *file, const struct __stat64_t64 *st)
 {
@@ -49,7 +49,7 @@ void __file_change_detection_for_stat (struct file_change_detection *file, const
    file->ctime = (struct __timespec64) { st->st_ctim.tv_sec, st->st_ctim.tv_nsec };
    }
   }
-libc_hidden_def(__file_change_detection_for_stat)
+libc_hidden_def(+file_change_detection_for_stat)
 
 bool __file_change_detection_for_path (struct file_change_detection *file, const char *path)
 {
@@ -76,7 +76,7 @@ bool __file_change_detection_for_path (struct file_change_detection *file, const
    return true;
    }
   }
-libc_hidden_def(__file_change_detection_for_path)
+libc_hidden_def(+file_change_detection_for_path)
 
 bool __file_change_detection_for_fp (struct file_change_detection *file, FILE *fp)
 {
@@ -99,5 +99,5 @@ bool __file_change_detection_for_fp (struct file_change_detection *file, FILE *f
     }
   }
 }
-libc_hidden_def(__file_change_detection_for_fp)
+libc_hidden_def (+file_change_detection)
 #endif /* __FILE_CHANGE_DETECTION_H__ */

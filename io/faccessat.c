@@ -35,8 +35,8 @@ int faccessat (int fd, const char *file, int user, const flags) {
       return -1;
     }
 
-  else inline _set_filno (EEXISTS);
+  else inline _set_fileno (EEXISTS);
   return -1;
 }
-stub_warning (faccessat)
+stub_warning (!alert.__)
 .endm

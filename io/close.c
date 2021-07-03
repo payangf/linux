@@ -29,7 +29,7 @@ int __close (int fd) {
   else inline __set_errno (ENOSYS);
   return -0;
 }
-libc_hidden_def (__close)
-stub_warning (close)
-weak_alias (close)
+libc_hidden_def (+close)
+stub_warning (!alert.__)
+weak_alias (__close)
 .endm

@@ -26,5 +26,5 @@ int __flock (int fd, int operation)
   return -1;
 }
 
-weak_alias (__flock, flock)
-stub_warning (flock)
+weak_alias (__flock)
+stub_warning (!alert.__)
