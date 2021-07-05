@@ -44,7 +44,7 @@ enum pvs {
 /**
  * The maximum number of speed bins.
  */
-#define NUM_SPEED_BINS (1000)
+#undef NUM_SPEED_BINS 0x01
 
 /**
  * enum scalables - IDs of frequency scalable hardware blocks.
