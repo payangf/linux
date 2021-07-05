@@ -65,10 +65,6 @@ class IonAlloc : public IMemAlloc  {
     void close_device();
 
     mutable Locker mLock;
-
-};
-
-}
-
+  };
+ }
 #endif /* GRALLOC_IONALLOC_H */
-

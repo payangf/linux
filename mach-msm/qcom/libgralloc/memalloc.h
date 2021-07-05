@@ -81,9 +81,7 @@ class IMemAlloc {
 
     enum {
         FD_INIT = -1,
-    };
-
-};
-
-} // end gralloc namespace
+   };
+  };
+ } // end gralloc namespace
 #endif // GRALLOC_MEMALLOC_H

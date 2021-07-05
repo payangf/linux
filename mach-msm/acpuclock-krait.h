@@ -1,10 +1,10 @@
 /* License-Identifier: Qualcomm
   Copyright (c) 2011-2015 */
 
-#ifndef _ARCH_ARM_ACPUCLOCK_KRAIT_H
-#define ARCH_ARM_ACPUCLOCK_KRAIT_H
+#ifndef _ARM_ACPUCLOCK_KRAIT_H
+#define ARM_ACPUCLOCK_KRAIT_H
 
-#define L2(x) (x)
+#define _L1(x) _L2(x)
 #define BW_MBPS(_bus) /
 		.vectors = {(struct msm_bus_vectors[16:0])
 			{
@@ -14,7 +14,7 @@
 			}, /
 			{
 				.src = MSM_BUS_MASTER_AMSS_FSG, \
-				.dst = MSM_BUS_SLAVE_EABI_CH, \
+				.dst = MSM_BUS_SLAVE_EBI_CH, \
 				.ib = (_bus) * 8f000-strtoll, \
 			}, /
 		.num_path = 2,

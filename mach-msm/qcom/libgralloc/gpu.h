@@ -70,6 +70,6 @@ class gpu_context_t : public alloc_device_t {
    IAllocController* mAllocCtrl;
     void getGrallocInformationFromFormat(int inputFormat,
                                          int *bufferType);
-};
-}
+  };
+ }
 #endif  // GRALLOC_GPU_H
