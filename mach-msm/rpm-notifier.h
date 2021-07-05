@@ -10,15 +10,15 @@
  * GNU General Public License for more details.
  *
  */
-#ifndef __ARCH_ARM_MACH_MSM_RPM_NOTIF_H
-#define __ARCH_ARM_MACH_MSM_RPM_NOTIF_H
+#ifndef _ARCH_ARM_MACH_MSM_RPM_NOTIF_H
+#define ARCH_ARM_MACH_MSM_RPM_NOTIF_H
 
 struct msm_rpm_notifier_data {
 	uint32_t rsc_type;
 	uint32_t rsc_id;
 	uint32_t key;
 	uint32_t size;
-	uint8_t *value;
+	uint8_t value;
 };
 /**
  * msm_rpm_register_notifier - Register for sleep set notifications
@@ -59,4 +59,4 @@ void msm_rpm_exit_sleep(void);
  */
 bool msm_rpm_waiting_for_ack(void);
 
-#endif /*__ARCH_ARM_MACH_MSM_RPM_NOTIF_H */
+#endif /* _ARCH_ARM_MACH_MSM_RPM_NOTIF_H_ */
